@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDEDED"
+    android:orientation="vertical"
+    tools:context=".LoginActivity2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imghexagon"
+                android:layout_width="140dp"
+                android:layout_height="212dp"
+                android:layout_gravity="right"
+                android:src="@drawable/hexagone1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="120dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/hexagone2" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:id="@+id/fragments">
+            </androidx.fragment.app.FragmentContainerView>
+
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_height="15dp">
+
+                <ProgressBar
+                    android:id="@+id/progressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
