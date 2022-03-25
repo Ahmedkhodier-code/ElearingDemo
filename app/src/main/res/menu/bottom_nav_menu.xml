@@ -9,6 +9,10 @@
         android:icon="@drawable/activity_icon_184244"
         android:title="Activity Stream" />
     <item
+        android:id="@+id/message"
+        android:icon="@drawable/chat"
+        android:title="Message" />
+    <item
         android:id="@+id/settings"
         android:icon="@drawable/settings"
         android:title="Settings" />

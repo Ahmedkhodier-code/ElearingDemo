@@ -2,8 +2,6 @@ package sci.khodier.andriod.elearningdemo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,20 +15,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     Courses_Frag Courses = new Courses_Frag(this ,currentUser);
-    navigator_frag2 secondFragment = new navigator_frag2();
+    profile_frag secondFragment = new profile_frag();
     navigator_frag3 thirdFragment = new navigator_frag3();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-//
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.home_fragment, new Courses_Frag(this, currentUser));
-//        fragmentTransaction.commit();
-
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.course);

@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/buttonstyle.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/cursor_color.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/edittext_bg.xml" value="0.2911458333333333" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/gradientbackground.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/grey_cursor_color.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/half_blue_roundshape.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/half_circle.xml" value="0.2911458333333333" />
@@ -18,6 +20,7 @@
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_navigator1.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_registration.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_login.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_profile.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_signup.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_courses.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_dashboard.xml" value="0.275" />

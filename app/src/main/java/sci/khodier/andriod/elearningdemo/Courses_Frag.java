@@ -18,13 +18,10 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,7 +34,6 @@ import java.util.Objects;
 public class Courses_Frag extends Fragment implements View.OnClickListener {
 
     private final Context context;
-    boolean f;
     TextView name;
     FrameLayout signOut , addCourse;
     private FirebaseAuth mAuth;
@@ -47,7 +43,6 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
     DocumentReference ref ;
     ArrayList<Course> myListData = new ArrayList<>();
     private static final String TAG = "ReadAndWriteSnippets";
-    private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     public Courses_Frag(Context context , FirebaseUser currentUser) {
         this.context=context;
@@ -114,8 +109,6 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
                          } else {
                              Log.d(  "Document"  , "No data");
                          }
-                     }else{
-
                      }
                  }
              });
@@ -124,7 +117,7 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
         signOut = rootView.findViewById(R.id.toogle);
         signOut.setOnClickListener(this);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
         MyListAdapter adapter = new MyListAdapter(myListData , context);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -133,7 +126,6 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
     return rootView;
     }
 
-
     @Override
     public void onClick(View v) {
         if(v==addCourse){
@@ -141,8 +133,8 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
         }
         if(v==signOut) {
             progressbar.setVisibility(View.VISIBLE);
-            mAuth.getInstance().signOut();
-            Intent intent = new Intent(context ,LoginActivity2.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);;
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(context ,LoginActivity2.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             progressbar.setVisibility(View.GONE);
             startActivity(intent);
 
