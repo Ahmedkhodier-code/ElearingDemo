@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="sci.khodier.andriod.elearningdemo">
+    package="sci.khodier.andriod.elearningdemo" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/elicone"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icone"
         android:supportsRtl="true"
         android:theme="@style/Theme.ElearingDemo"
-        android:usesCleartextTraffic="true">
-
+        android:usesCleartextTraffic="true" >
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:noHistory="true">
-
+            android:noHistory="true" >
         </activity>
         <activity
             android:name=".SplashScrean"
             android:exported="true"
-            android:noHistory="true">
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +30,7 @@
         <activity
             android:name=".LoginActivity2"
             android:exported="true"
-            android:noHistory="true"/>
+            android:noHistory="true" />
     </application>
 
 </manifest>

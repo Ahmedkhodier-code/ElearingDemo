@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,32 +8,44 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-        <FrameLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imghexagon"
+            android:layout_width="140dp"
+            android:layout_height="212dp"
+            android:layout_gravity="right"
+            android:contentDescription="@android:string/ok"
+            android:src="@drawable/hexagone1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="120dp"
+            android:contentDescription="@android:string/ok"
+            android:scaleType="fitXY"
+            android:src="@drawable/hexagone2" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/home_fragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/imghexagon"
-                android:layout_width="140dp"
-                android:layout_height="212dp"
-                android:layout_gravity="end"
-                android:src="@drawable/hexagone1"
-                android:contentDescription="@android:string/ok"/>
+        </androidx.fragment.app.FragmentContainerView>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="120dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/hexagone2"
-                android:contentDescription="@android:string/ok"/>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_nav_menu" />
 
-            <androidx.fragment.app.FragmentContainerView
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:id="@+id/fragments">
-            </androidx.fragment.app.FragmentContainerView>
-
-        </FrameLayout>
+    </FrameLayout>
 
 </LinearLayout>

@@ -75,6 +75,7 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
             }}
             }
         });
+        myListData = new ArrayList<>();
         db.collection("courses").whereEqualTo("Active",true)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

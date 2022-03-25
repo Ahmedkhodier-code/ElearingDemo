@@ -15,13 +15,22 @@
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_login.xml" value="0.15579710144927536" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_login2.xml" value="0.264" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_navigator1.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_registration.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_login.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_signup.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_courses.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_dashboard.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_home.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_navi.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_navi2.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_navi3.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_notifications.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/home_frag.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/list_item.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/navigation_menu.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/side_slide.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/mipmap-anydpi-v26/ELIcone.xml" value="0.2911458333333333" />
       </map>
     </option>
