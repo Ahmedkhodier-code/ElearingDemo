@@ -1,105 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/round3_button"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
 
     <LinearLayout
         android:id="@+id/signupframe"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_gravity="left"
-        android:paddingTop="125dp"
         android:layout_marginLeft="36dp"
         android:layout_marginBottom="90dp"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="50dp">
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="left"
             android:gravity="left"
             android:text="SIGN UP"
-            android:layout_gravity="left"
             android:textColor="#fefefe"
             android:textSize="35sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
             android:layout_gravity="left"
             android:layout_marginTop="22.7dp"
-            android:textColor="#fefefe"
             android:text="Username"
-            />
+            android:textColor="#fefefe"
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:inputType="textEmailAddress"
-            android:textCursorDrawable="@drawable/white_cursor_color"
             android:layout_gravity="left"
-            android:maxLines="1"
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
-            />
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textCursorDrawable="@drawable/white_cursor_color"
+            android:textSize="15sp" />
 
         <View
             android:layout_width="263.7dp"
             android:layout_height="1dp"
             android:layout_gravity="left"
             android:layout_marginTop="3.3dp"
-            android:background="#f2f2f3"/>
+            android:background="#f2f2f3" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
             android:layout_gravity="left"
             android:layout_marginTop="15dp"
-            android:textColor="#fefefe"
             android:text="Email"
-            />
+            android:textColor="#fefefe"
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:inputType="textEmailAddress"
-            android:textCursorDrawable="@drawable/white_cursor_color"
             android:layout_gravity="left"
-            android:maxLines="1"
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
-            />
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textCursorDrawable="@drawable/white_cursor_color"
+            android:textSize="15sp" />
 
         <View
             android:layout_width="263.7dp"
             android:layout_height="1dp"
             android:layout_gravity="left"
             android:layout_marginTop="3.3dp"
-            android:background="#f2f2f3"/>
+            android:background="#f2f2f3" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:textColor="#fefefe"
             android:layout_gravity="left"
             android:layout_marginTop="15dp"
             android:text="Password"
-            />
+            android:textColor="#fefefe"
+            android:textSize="17sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,8 +102,7 @@
             android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/etPasswordLayout1"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
@@ -116,11 +110,12 @@
 
                 <android.widget.EditText
                     android:id="@+id/Password1"
-                    android:background="@android:color/transparent"                            android:layout_width="match_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:background="@android:color/transparent"
+                    android:inputType="textPassword"
                     android:textColor="#FFFFFF"
-                    android:inputType="textPassword"/>
+                    android:textSize="15sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,76 +127,161 @@
             android:layout_height="1dp"
             android:layout_gravity="left"
             android:layout_marginTop="3.3dp"
-            android:background="#f2f2f3"/>
+            android:background="#f2f2f3" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:textColor="#fefefe"
             android:layout_gravity="left"
             android:layout_marginTop="15dp"
             android:text="Phone"
-            />
+            android:textColor="#fefefe"
+            android:textSize="17sp" />
 
-            <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/editTextPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="01XXXXXXXXX"
-                    android:textSize="15sp"
-                    android:inputType="phone" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="optional"
-                    android:textColor="#fefefe"
-                    android:textSize="17sp" />
-
-            </LinearLayout>
-
-        <View
-            android:layout_width="263.7dp"
-            android:layout_height="1dp"
-            android:layout_gravity="left"
-            android:background="#f2f2f3"/>
-
-        <Spinner
-            android:id="@+id/spinner1"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="01XXXXXXXXX"
+                android:inputType="phone"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="optional"
+                android:textColor="#fefefe"
+                android:textSize="17sp" />
+
+        </LinearLayout>
 
         <View
             android:layout_width="263.7dp"
             android:layout_height="1dp"
             android:layout_gravity="left"
-            android:background="#f2f2f3"/>
+            android:background="#f2f2f3" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_gravity="left"
+                android:text="University of : "
+                android:textColor="#fefefe"
+                android:textSize="17sp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="263.7dp"
+            android:layout_height="1dp"
+            android:layout_gravity="left"
+            android:background="#f2f2f3" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_gravity="left"
+                android:text="Faculty of : "
+                android:textColor="#fefefe"
+                android:textSize="17sp" />
+
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="263.7dp"
+            android:layout_height="1dp"
+            android:layout_gravity="left"
+            android:background="#f2f2f3" />
 
         <RadioGroup
             android:id="@+id/type"
             android:layout_width="match_parent"
-            android:layout_height="68dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/Instructor"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="33dp"
+                android:layout_gravity="left"
                 android:text="Instructor" />
 
             <RadioButton
                 android:id="@+id/Student"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="33dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="43dp"
                 android:text="Student" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/one"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:layout_gravity="left"
+                android:text="1" />
+
+            <RadioButton
+                android:id="@+id/two"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="20dp"
+                android:text="2" />
+
+            <RadioButton
+                android:id="@+id/three"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="20dp"
+                android:text="3" />
+
+            <RadioButton
+                android:id="@+id/four"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="20dp"
+                android:text="4" />
         </RadioGroup>
 
         <LinearLayout
@@ -213,8 +293,8 @@
                 android:id="@+id/haveacc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#fefefe"
                 android:text="Have an Account?"
+                android:textColor="#fefefe"
                 android:textSize="13dp" />
 
 
@@ -258,4 +338,4 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-</FrameLayout >
+</FrameLayout>

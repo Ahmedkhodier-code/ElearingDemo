@@ -4,8 +4,8 @@ import android.graphics.Bitmap;
 
 public class Course {
    private String name,id;
-    private String img;
-public Course(String name, String id,String img){
+    private Bitmap img;
+public Course(String name, String id,Bitmap img){
     this.id = id;
     this.name = name;
     this.img = img;
@@ -18,7 +18,7 @@ public Course(String name, String id,String img){
         this.id = id;
     }
 
-    public void setImg(String img) {
+    public void setImg(Bitmap img) {
         this.img = img;
     }
 
@@ -30,7 +30,7 @@ public Course(String name, String id,String img){
         return id;
     }
 
-    public String getImg() {
+    public Bitmap getImg() {
         return img;
     }
 }

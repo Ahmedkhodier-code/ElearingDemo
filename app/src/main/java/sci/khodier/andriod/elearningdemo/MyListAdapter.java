@@ -34,7 +34,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Course myListData = listdata.get(position);
         holder.textView.setText(listdata.get(position).getName());
-       // holder.imageView.setImageBitmap(listdata.get(position).getImg());
+        holder.imageView.setImageBitmap(listdata.get(position).getImg());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,8 +42,6 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
             }
         });
     }
-
-
     @Override
     public int getItemCount() {
         return listdata.size();

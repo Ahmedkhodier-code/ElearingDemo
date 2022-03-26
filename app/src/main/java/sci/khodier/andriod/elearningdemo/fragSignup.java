@@ -1,6 +1,5 @@
 package sci.khodier.andriod.elearningdemo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,80 +17,100 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.annotations.Nullable;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class fragSignup extends Fragment implements View.OnClickListener{
+public class fragSignup extends Fragment implements View.OnClickListener {
     Button signupFrame;
     EditText username, Email, password, phone;
-    String username0, Email0, password0, phone0, college ;
+    String username0, Email0, password0, phone0, college, university;
     Context context;
     ImageView next;
     RadioGroup Type;
+    RadioGroup Level;
     String type;
-    private DatabaseReference mDatabase;
+    int level;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    boolean flage=true ;
-//    private static final String TAG = "PhoneAuthActivity";
-//    private EditText emailTextView, passwordTextView;
-//    private Button Btn;
+    boolean flage = true;
+    boolean flage1 = true;
     private ProgressBar progressbar;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    Boolean checkUser;
 
     public fragSignup(Context context) {
-        this.context=context;
+        this.context = context;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView =  inflater.inflate(R.layout.frag_signup, container, false);
-        signupFrame=rootView.findViewById(R.id.login);
-        mAuth =  FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        View rootView = inflater.inflate(R.layout.frag_signup, container, false);
+        signupFrame = rootView.findViewById(R.id.login);
         progressbar = rootView.findViewById(R.id.progressbar);
         username = rootView.findViewById(R.id.username);
         Email = rootView.findViewById(R.id.Email);
         password = rootView.findViewById(R.id.Password1);
         phone = rootView.findViewById(R.id.editTextPhone);
-        Type=rootView.findViewById(R.id.type);
+        Type = rootView.findViewById(R.id.type);
+        Level = rootView.findViewById(R.id.level);
         signupFrame.setOnClickListener(this);
         next = rootView.findViewById(R.id.toogle);
         next.setOnClickListener(this);
         Type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.Instructor:
-                        type="Instructor";Toast.makeText(context, "Instructor", Toast.LENGTH_LONG).show();
-                        flage=false;
-                    break;
+                        type = "Instructor";
+                        Toast.makeText(context, "Instructor", Toast.LENGTH_LONG).show();
+                        flage = false;
+                        break;
                     case R.id.Student:
                         Toast.makeText(context, "Student", Toast.LENGTH_LONG).show();
                         flage = false;
-                        type="Student";
+                        type = "Student";
+                        break;
+                }
+            }
+        });
+        Level.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.one:
+                        level = 1;
+                        Toast.makeText(context, "one", Toast.LENGTH_LONG).show();
+                        flage1 = false;
+                        break;
+                    case R.id.two:
+                        Toast.makeText(context, "two", Toast.LENGTH_LONG).show();
+                        flage1 = false;
+                        level = 2;
+                        break;
+                    case R.id.three:
+                        Toast.makeText(context, "two", Toast.LENGTH_LONG).show();
+                        flage1 = false;
+                        level = 3;
+                        break;
+                    case R.id.four:
+                        Toast.makeText(context, "two", Toast.LENGTH_LONG).show();
+                        flage1 = false;
+                        level = 4;
                         break;
                 }
             }
@@ -99,46 +118,60 @@ public class fragSignup extends Fragment implements View.OnClickListener{
         //--------------------------------
 
         Spinner dropdown = rootView.findViewById(R.id.spinner1);
-        String[] items = new String[]{"choose","كليه العلوم", "كليه التجاره", "كليه الهندسه"};
+        Spinner dropdown1 = rootView.findViewById(R.id.spinner);
+        String[] items = new String[]{"Arts", "Science", "Commerce", "Engineering", "Computers and Information"};
+        String[] items1 = new String[]{"Helwan", "Cairo", "Alex", "Ain Shams", "Mansoura", "Al-Azhar"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, items1);
+        dropdown1.setAdapter(adapter1);
+        dropdown1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("item", (String) parent.getItemAtPosition(position));
+                university = (String) parent.getItemAtPosition(position);
+                Toast.makeText(context, university + " is selected", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(context, "Please enter your college!", Toast.LENGTH_LONG).show();
+            }
+        });
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.v("item", (String) parent.getItemAtPosition(position));
-               college= (String) parent.getItemAtPosition(position);
-               Toast.makeText(context , college+" is selected",Toast.LENGTH_SHORT).show();
+                college = (String) parent.getItemAtPosition(position);
+                Toast.makeText(context, college + " is selected", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // TODO Auto-generated method stub
-                if (TextUtils.equals(college,"choose")) {
-                    Toast.makeText(context, "Please enter your college!", Toast.LENGTH_LONG).show();
-                    return;
-                }
+                Toast.makeText(context, "Please enter your college!", Toast.LENGTH_LONG).show();
+
             }
         });
         //--------------------------------
         return rootView;
     }
+
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-        }
+
     }
+
     @Override
     public void onClick(View v) {
-        if(v==signupFrame){
+        if (v == signupFrame) {
             loadFragment(new fragLogin(context));
         }
-        if(v==next) {
+        if (v == next) {
             registerNewUser();
         }
     }
-    private void registerNewUser()
-    {
+
+    private void registerNewUser() {
         // show the visibility of progress bar to show loading
         // Take the value of two edit texts in Strings
         Email0 = Email.getText().toString();
@@ -166,30 +199,32 @@ public class fragSignup extends Fragment implements View.OnClickListener{
             Toast.makeText(context, "Please enter your type!", Toast.LENGTH_LONG).show();
             return;
         }
+        if (flage1) {
+            Toast.makeText(context, "Please enter your level!", Toast.LENGTH_LONG).show();
+            return;
+        }
         progressbar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(Email0, password0)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
-                         final String TAG = "DocSnippets";
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        final String TAG = "DocSnippets";
                         if (task.isSuccessful()) {
                             FirebaseUser fbUser = mAuth.getCurrentUser();
 
-                            addUser(username0,Email0,college,phone0,type);
+                            addUser(username0, Email0, college, phone0, type, university);
 
-                            System.out.println("result of success: "+task.getResult());
+                            System.out.println("result of success: " + task.getResult());
                             Toast.makeText(context, "Registration successful!", Toast.LENGTH_LONG).show();
                             // hide the progress bar
                             // if the user created intent to login activity
                             Intent intent = new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             FirebaseUser currentUser = mAuth.getCurrentUser();
-                            intent.putExtra("currentUser",currentUser);
+                            intent.putExtra("currentUser", currentUser);
                             progressbar.setVisibility(View.GONE);
                             startActivity(intent);
-                        }
-                        else {
-                       //     System.out.println("result of failed: "+task.getResult());
+                        } else {
+                            //     System.out.println("result of failed: "+task.getResult());
                             // Registration failed
                             Toast.makeText(context, "Registration failed!!" + " Please try another Email", Toast.LENGTH_LONG).show();
                             // hide the progress bar
@@ -197,8 +232,10 @@ public class fragSignup extends Fragment implements View.OnClickListener{
                         }
                     }
                 });
+
     }
-    public void addUser(String userName ,String Email,String college ,String phone,String role) {
+
+    public void addUser(String userName, String Email, String college, String phone, String role, String university) {
         final String TAG = "DocSnippets";
         // [START add_ada_lovelace]
         // Create a new user with a first and last name
@@ -206,9 +243,11 @@ public class fragSignup extends Fragment implements View.OnClickListener{
         user.put("Email", Email);
         user.put("username", userName);
         user.put("phone", phone);
-        user.put("college" , college);
-        user.put("role" , role);
-        user.put("timestamp" , FieldValue.serverTimestamp());
+        user.put("college", college);
+        user.put("role", role);
+        user.put("timestamp", FieldValue.serverTimestamp());
+        user.put("University", university);
+        user.put("level", level);
 
         // Add a new document with a generated ID
         db.collection("users").document(Email0).set(user)
@@ -218,17 +257,17 @@ public class fragSignup extends Fragment implements View.OnClickListener{
                         if (task.isSuccessful()) {
                             Log.d(TAG, "user added " + task.getResult());
                             System.out.println("user added in db: " + task.getResult());
-                        }else{
+                            checkUser=true;
                         }
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
+                        checkUser=false;
                         System.out.println("--------------------------------");
-                        System.out.println("user doesn't added "+e.toString());
+                        System.out.println("user doesn't added " + e.toString());
                         System.out.println("--------------------------------");
                     }
                 });

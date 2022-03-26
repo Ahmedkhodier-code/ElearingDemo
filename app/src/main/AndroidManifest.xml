@@ -3,6 +3,7 @@
     package="sci.khodier.andriod.elearningdemo" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"

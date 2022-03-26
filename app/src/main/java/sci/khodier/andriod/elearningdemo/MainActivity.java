@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,8 +16,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     Courses_Frag Courses = new Courses_Frag(this ,currentUser);
-    profile_frag secondFragment = new profile_frag();
-    navigator_frag3 thirdFragment = new navigator_frag3();
+    profile_frag profile = new profile_frag(this , currentUser);
+    navigator_frag3 settings = new navigator_frag3();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setSelectedItemId(R.id.course);
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -35,12 +35,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment, Courses).commit();
                 return true;
 
-            case R.id.home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment, secondFragment).commit();
+            case R.id.profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment, profile).commit();
                 return true;
 
             case R.id.settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment, thirdFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment, settings).commit();
+                return true;
+            case R.id.home:
+                Toast.makeText(this, "you clicked on home", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.message:
+                Toast.makeText(this, "you clicked on messages", Toast.LENGTH_LONG).show();
                 return true;
         }
         return false;
