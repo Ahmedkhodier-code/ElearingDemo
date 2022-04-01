@@ -46,12 +46,14 @@ public class regCourse extends Fragment {
     CheckBox checkBox;
     Button create;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    EditText courseName;
+    EditText courseName, password;
     boolean flag;
     DocumentReference ref;
     Boolean checkCourse;
     String sItem;
+    private static final String TAG = "ReadAndWriteSnippets";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public regCourse(Context context) {
         this.context = context;
     }
@@ -65,6 +67,7 @@ public class regCourse extends Fragment {
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
         collage = rootView.findViewById(R.id.collage);
         create = rootView.findViewById(R.id.create);
+        password = rootView.findViewById(R.id.password);
         courseName = rootView.findViewById(R.id.courseName);
         String[] items = new String[]{"Arts", "Science", "Commerce", "Engineering", "Computers and Information"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, items);
@@ -110,48 +113,33 @@ public class regCourse extends Fragment {
                 if (courseName.getText().toString().equals("")) {
                     Toast.makeText(context, "please enter name", Toast.LENGTH_LONG).show();
                 } else {
-                    searchCourse(courseName.getText()+"",sItem);
+                    searchCourse(courseName.getText() + "", password.getText() + "",sItem);
                 }
             }
         });
 
         return rootView;
     }
-    public void searchCourse(String name, String college) {
-        final String TAG = "DocSnippets";
-//        db.collection("courses").document().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        if(courseName.getText()==document.get("name")){
-//                            document.getId();
-//                            document.get("name");
-//                            document.get("img");
-//                            ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
-//                            ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                                    if (task.isSuccessful()) {
-//                                        DocumentSnapshot doc = task.getResult();
-//                                        if (doc.exists()) {
-//
-//                                        } else {
-//                                            Log.d("Document", "No data");
-//                                        }
-//                                    }
-//                                }
-//                            });
-//                        }
-//                    }
-//                } else {
-//                    Log.w(TAG, "Error getting documents.", task.getException());
-//                    Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
-//                    System.out.println("result of failed: " + task.getException());
-//                }
-//            }
-//        });
-        // [END add_ada_lovelace]
+
+    public void searchCourse(String courseName, String password, String college) {
+        db.collection("courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (courseName.equals(document.getString("name")) && password.equals(document.getString("password"))) {
+                            //----------
+                            break;
+                        }
+                    }
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                    Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
+                    System.out.println("result of failed: " + task.getException());
+                }
+            }
+        });
     }
 
 }

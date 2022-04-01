@@ -30,24 +30,29 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class fragAddCourse extends Fragment implements View.OnClickListener{
+public class fragAddCourse extends Fragment implements View.OnClickListener {
     Context context;
     View rootView;
     Spinner collage;
     CheckBox checkBox;
     Button create;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    EditText courseName;
+    EditText courseName , password;
     boolean flag;
     Boolean checkCourse;
-    String sItem;
+    String sItem , username;
+    DocumentReference ref;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public fragAddCourse(Context context) {
         this.context = context;
     }
@@ -56,10 +61,11 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.addcourse_frag, container, false);
+        rootView = inflater.inflate(R.layout.frag_addcourse, container, false);
         TransitionInflater inflater0 = TransitionInflater.from(requireContext());
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
         collage = rootView.findViewById(R.id.collage);
+        password=rootView.findViewById(R.id.password);
         create = rootView.findViewById(R.id.create);
         courseName = rootView.findViewById(R.id.courseName);
         String[] items = new String[]{"Arts", "Science", "Commerce", "Engineering", "Computers and Information"};
@@ -68,7 +74,7 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
         collage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                 sItem = parent.getItemAtPosition(position).toString();
+                sItem = parent.getItemAtPosition(position).toString();
                 Toast.makeText(context, sItem, Toast.LENGTH_LONG).show();
                 flag = true;
             }
@@ -103,23 +109,63 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
         create.setOnClickListener(this);
         return rootView;
     }
-    public void addCourse(String name, String college) {
-        final String TAG = "DocSnippets";
+
+    public void addCourse(String courseName, String college , String password) {
+        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        username=doc.get("username")+"";
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
+            final String TAG = "DocSnippets";
         Map<String, Object> course = new HashMap<>();
-        course.put("name", name);
+        course.put("name", courseName);
         course.put("college", college);
         course.put("timestamp", FieldValue.serverTimestamp());
         course.put("img", "");
-        course.put("active" , true);
+        course.put("creator", currentUser.getEmail());
+        course.put("creatorName", username);
+        course.put("active", true);
+        course.put("password", password);
+
         // Add a new document with a generated ID
-        db.collection("users").document(currentUser.getEmail()).collection("courses").document().set(course)
+//        db.collection("users").document(currentUser.getEmail()).collection("courses").document().set(course)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "user added " + task.getResult());
+//                            System.out.println("user added in db in his course collection: " + task.getResult());
+//                            checkCourse = true;
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error adding document", e);
+//                        checkCourse = false;
+//                        System.out.println("--------------------------------");
+//                        System.out.println("Course doesn't added " + e.toString());
+//                        System.out.println("--------------------------------");
+//                    }
+//                });
+        db.collection("courses").document().set(course)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "user added " + task.getResult());
-                            System.out.println("user added in db: " + task.getResult());
-                            checkCourse=true;
+                            System.out.println("user added in db courses collection: " + task.getResult());
+                            checkCourse = true;
                         }
                     }
                 })
@@ -127,7 +173,7 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
-                        checkCourse=false;
+                        checkCourse = false;
                         System.out.println("--------------------------------");
                         System.out.println("Course doesn't added " + e.toString());
                         System.out.println("--------------------------------");
@@ -138,11 +184,14 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        System.out.println("buttom create clicked");
+        if (v == create) {
+            System.out.println("buttom create clicked");
             Toast.makeText(context, courseName.getText(), Toast.LENGTH_LONG).show();
-            addCourse(courseName.getText()+"",sItem);
-        loadFragment(new Courses_Frag(context, currentUser));
+            addCourse(courseName.getText() + "", sItem ,password.getText()+"");
+            loadFragment(new fragCourse(context, currentUser));
+        }
     }
+
     private void loadFragment(Fragment fragment) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
