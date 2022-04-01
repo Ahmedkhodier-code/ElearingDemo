@@ -103,12 +103,12 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                         level = 2;
                         break;
                     case R.id.three:
-                        Toast.makeText(context, "two", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "three", Toast.LENGTH_LONG).show();
                         flage1 = false;
                         level = 3;
                         break;
                     case R.id.four:
-                        Toast.makeText(context, "two", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "four", Toast.LENGTH_LONG).show();
                         flage1 = false;
                         level = 4;
                         break;

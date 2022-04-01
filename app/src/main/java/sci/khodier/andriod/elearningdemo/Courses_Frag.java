@@ -53,6 +53,7 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
     ArrayList<Course> myListData = new ArrayList<>();
     Bitmap img, bitmap, bt;
     View rootView;
+    String role;
     private static final String TAG = "ReadAndWriteSnippets";
 
     public Courses_Frag(Context context, FirebaseUser currentUser) {
@@ -110,6 +111,7 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         name.setText("Hi " + doc.get("username"));
+                        role=doc.get("role")+"";
                     } else {
                         Log.d("Document", "No data");
                     }
@@ -131,9 +133,13 @@ public class Courses_Frag extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == addCourse) {
-            Toast.makeText(context, "add Courses.", Toast.LENGTH_SHORT).show();
-            loadFragment(new fragAddCourse(context));
-
+            if(role.equals("Instructor")){
+                Toast.makeText(context, "add Courses.", Toast.LENGTH_SHORT).show();
+                loadFragment(new fragAddCourse(context));
+            }else if(role.equals("Student")){
+                Toast.makeText(context, "add Courses.", Toast.LENGTH_SHORT).show();
+                loadFragment(new regCourse(context));
+            }
         }
     }
 

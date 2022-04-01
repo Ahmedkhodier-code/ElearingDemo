@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.transition.Slide;
 import android.transition.Transition;
@@ -30,13 +28,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class fragAddCourse extends Fragment implements View.OnClickListener{
+public class regCourse extends Fragment {
     Context context;
     View rootView;
     Spinner collage;
@@ -45,10 +48,11 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     EditText courseName;
     boolean flag;
+    DocumentReference ref;
     Boolean checkCourse;
     String sItem;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public fragAddCourse(Context context) {
+    public regCourse(Context context) {
         this.context = context;
     }
 
@@ -56,7 +60,7 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.addcourse_frag, container, false);
+        rootView = inflater.inflate(R.layout.frag_reg_course, container, false);
         TransitionInflater inflater0 = TransitionInflater.from(requireContext());
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
         collage = rootView.findViewById(R.id.collage);
@@ -68,7 +72,7 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
         collage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                 sItem = parent.getItemAtPosition(position).toString();
+                sItem = parent.getItemAtPosition(position).toString();
                 Toast.makeText(context, sItem, Toast.LENGTH_LONG).show();
                 flag = true;
             }
@@ -100,53 +104,54 @@ public class fragAddCourse extends Fragment implements View.OnClickListener{
                 }
             }
         });
-        create.setOnClickListener(this);
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (courseName.getText().toString().equals("")) {
+                    Toast.makeText(context, "please enter name", Toast.LENGTH_LONG).show();
+                } else {
+                    searchCourse(courseName.getText()+"",sItem);
+                }
+            }
+        });
+
         return rootView;
     }
-    public void addCourse(String name, String college) {
+    public void searchCourse(String name, String college) {
         final String TAG = "DocSnippets";
-        Map<String, Object> course = new HashMap<>();
-        course.put("name", name);
-        course.put("college", college);
-        course.put("timestamp", FieldValue.serverTimestamp());
-        course.put("img", "");
-        course.put("active" , true);
-        // Add a new document with a generated ID
-        db.collection("users").document(currentUser.getEmail()).collection("courses").document().set(course)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "user added " + task.getResult());
-                            System.out.println("user added in db: " + task.getResult());
-                            checkCourse=true;
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                        checkCourse=false;
-                        System.out.println("--------------------------------");
-                        System.out.println("Course doesn't added " + e.toString());
-                        System.out.println("--------------------------------");
-                    }
-                });
+//        db.collection("courses").document().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        if(courseName.getText()==document.get("name")){
+//                            document.getId();
+//                            document.get("name");
+//                            document.get("img");
+//                            ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+//                            ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        DocumentSnapshot doc = task.getResult();
+//                                        if (doc.exists()) {
+//
+//                                        } else {
+//                                            Log.d("Document", "No data");
+//                                        }
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                } else {
+//                    Log.w(TAG, "Error getting documents.", task.getException());
+//                    Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
+//                    System.out.println("result of failed: " + task.getException());
+//                }
+//            }
+//        });
         // [END add_ada_lovelace]
     }
 
-    @Override
-    public void onClick(View v) {
-        System.out.println("buttom create clicked");
-            Toast.makeText(context, courseName.getText(), Toast.LENGTH_LONG).show();
-            addCourse(courseName.getText()+"",sItem);
-        loadFragment(new Courses_Frag(context, currentUser));
-    }
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.home_fragment, fragment);
-        fragmentTransaction.commit(); // save the changes
-    }
 }
