@@ -2,8 +2,6 @@ package sci.khodier.andriod.elearningdemo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,8 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -68,7 +64,7 @@ public class fragCourse extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_courses, container, false);
+        rootView = inflater.inflate(R.layout.frag_courses, container, false);
         TransitionInflater inflater0 = TransitionInflater.from(requireContext());
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
         progressbar = rootView.findViewById(R.id.progressbar);
@@ -100,6 +96,7 @@ public class fragCourse extends Fragment implements View.OnClickListener {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
+        progressbar.setVisibility(View.GONE);
         return rootView;
     }
 
