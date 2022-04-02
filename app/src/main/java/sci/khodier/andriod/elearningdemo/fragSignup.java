@@ -191,7 +191,7 @@ public class fragSignup extends Fragment implements View.OnClickListener {
             Toast.makeText(context, "Please enter password!", Toast.LENGTH_LONG).show();
             return;
         }
-        if (TextUtils.isEmpty(phone0)) {
+        if (TextUtils.isEmpty(phone0) ) {
             Toast.makeText(context, "Please enter phone!", Toast.LENGTH_LONG).show();
             return;
         }

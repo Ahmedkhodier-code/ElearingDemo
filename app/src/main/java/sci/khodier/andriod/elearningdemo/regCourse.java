@@ -92,39 +92,21 @@ public class regCourse extends Fragment implements View.OnClickListener{
     }
 
     public void searchCourse(String courseName, String password) {
-        db.collection("courses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-
+        db.collection("courses").whereEqualTo("name", courseName).whereEqualTo("password",password)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (courseName.equals(document.getString("name")) && password.equals(document.getString("password"))) {
-                            Map<String, Object> course = new HashMap<>();
-                            course.put("courseId", document.getId());
-                            course.put("courseName", courseName);
-                            db.collection("courses").document().set(course)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Log.d(TAG, "user added " + task.getResult());
-                                                System.out.println("user added in db courses collection: " + task.getResult());
-                                            }
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error adding document", e);
-                                            System.out.println("--------------------------------");
-                                            System.out.println("Course doesn't added " + e.toString());
-                                            System.out.println("--------------------------------");
-                                        }
-                                    });
-                            break;
-                        }
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        Log.d(TAG, "the img" + " => " + document.getString("img"));
+                        Map<String, Object> course = new HashMap<>();
+                        course.put("courseId", document.getId());
+                        course.put("courseName", courseName);
+                        addCourse(course);
+                        break;
+
                     }
-                    loadFragment(new fragCourse(context , currentUser));
                 } else {
                     Log.w(TAG, "Error getting documents.", task.getException());
                     Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
@@ -132,6 +114,28 @@ public class regCourse extends Fragment implements View.OnClickListener{
                 }
             }
         });
+        //------------------------------
+    }
+    public void addCourse(Map<String, Object> course){
+        db.collection("courses").document().set(course)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "user added " + task.getResult());
+                            System.out.println("user added in db courses collection: " + task.getResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                        System.out.println("--------------------------------");
+                        System.out.println("Course doesn't added " + e.toString());
+                        System.out.println("--------------------------------");
+                    }
+                });
     }
     private void loadFragment(Fragment fragment) {
         FragmentManager fm = getFragmentManager();
