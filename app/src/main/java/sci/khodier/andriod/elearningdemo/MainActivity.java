@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     FirebaseUser currentUser = mAuth.getCurrentUser();
     fragCourse Courses = new fragCourse(this ,currentUser);
     profile_frag profile = new profile_frag(this , currentUser);
-    navigator_frag3 settings = new navigator_frag3();
+    fragSettings settings = new fragSettings();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

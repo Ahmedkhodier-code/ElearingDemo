@@ -41,17 +41,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class regCourse extends Fragment implements View.OnClickListener{
+public class fragRegCourse extends Fragment {
+    boolean std;
     Context context;
     View rootView;
     CheckBox checkBox;
     Button add;
+    boolean flage;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     EditText courseName, password;
     private static final String TAG = "ReadAndWriteSnippets";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public regCourse(Context context) {
+    public fragRegCourse(Context context) {
         this.context = context;
     }
 
@@ -86,13 +88,21 @@ public class regCourse extends Fragment implements View.OnClickListener{
                 }
             }
         });
-
-
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("add clicked");
+                Toast.makeText(context, "you clicked add", Toast.LENGTH_LONG).show();
+                if (searchCourse(courseName.getText() + "", password.getText() + "")) {
+                    loadFragment(new fragCourse(context, currentUser));
+                }
+            }
+        });
         return rootView;
     }
 
-    public void searchCourse(String courseName, String password) {
-        db.collection("courses").whereEqualTo("name", courseName).whereEqualTo("password",password)
+    public boolean searchCourse(String courseName, String password) {
+        db.collection("courses").whereEqualTo("name", courseName).whereEqualTo("password", password)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -103,9 +113,8 @@ public class regCourse extends Fragment implements View.OnClickListener{
                         Map<String, Object> course = new HashMap<>();
                         course.put("courseId", document.getId());
                         course.put("courseName", courseName);
-                        addCourse(course);
+                        flage = addCourse(course , document.getId() );
                         break;
-
                     }
                 } else {
                     Log.w(TAG, "Error getting documents.", task.getException());
@@ -114,41 +123,61 @@ public class regCourse extends Fragment implements View.OnClickListener{
                 }
             }
         });
-        //------------------------------
+        return flage;
     }
-    public void addCourse(Map<String, Object> course){
-        db.collection("courses").document().set(course)
+
+    public boolean addCourse(Map<String, Object> course, String id) {
+        db.collection("users").document(currentUser.getEmail()).collection("courses").document(id).set(course)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()&&!std) {
+                            std=true;
+                            Map<String, Object> Student = new HashMap<>();
+                            Student.put("StudentEmail",currentUser.getEmail());
+                            db.collection("courses").document(id).collection("Students").
+                                    document().set(Student)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "user added " + task.getResult());
+                                                flage = true;
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            flage = false;
+                                            Log.w(TAG, "Error adding document", e);
+                                            System.out.println("--------------------------------");
+                                            System.out.println("Course doesn't added " + e.toString());
+                                            System.out.println("--------------------------------");
+                                        }
+                                    });
                             Log.d(TAG, "user added " + task.getResult());
-                            System.out.println("user added in db courses collection: " + task.getResult());
+                            flage = true;
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        flage = false;
                         Log.w(TAG, "Error adding document", e);
                         System.out.println("--------------------------------");
                         System.out.println("Course doesn't added " + e.toString());
                         System.out.println("--------------------------------");
                     }
                 });
+        return flage;
     }
+
     private void loadFragment(Fragment fragment) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = Objects.requireNonNull(fm).beginTransaction();
         fragmentTransaction.replace(R.id.home_fragment, fragment);
         fragmentTransaction.commit(); // save the changes
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(v==add){
-            Toast.makeText(context, "you clicked add", Toast.LENGTH_LONG).show();
-            searchCourse(courseName.getText() + "", password.getText() + "");
-    }
     }
 }
