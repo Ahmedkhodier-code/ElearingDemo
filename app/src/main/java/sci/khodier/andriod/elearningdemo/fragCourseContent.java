@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +19,31 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class fragCourseContent extends Fragment {
     private static final int RESULT_OK = 1;
     ImageView upload;
     Uri imageuri = null;
     ProgressDialog dialog;
-    String courseId;
-    String materialId;
+    String courseId , materialId , materialName;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<material> myListData = new ArrayList<>();
+    private static final String TAG = "ReadAndWriteSnippets";
+
     fragCourseContent(String courseId) {
         this.courseId = courseId;
     }
@@ -44,6 +55,13 @@ public class fragCourseContent extends Fragment {
         upload = rootView.findViewById(R.id.uploadpdf);
         // After Clicking on this we will be
         // redirected to choose pdf
+
+        getMaterial();
+        RecyclerView recyclerView = rootView.findViewById(R.id.material);
+        materialAdapter adapter = new materialAdapter(myListData, getContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,12 +71,6 @@ public class fragCourseContent extends Fragment {
                 startActivityForResult(galleryIntent, 1);
             }
         });
-
-        RecyclerView recyclerView = rootView.findViewById(R.id.material);
-        materialAdapter adapter = new materialAdapter(myListData, getContext());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
         return rootView;
     }
 
@@ -66,7 +78,7 @@ public class fragCourseContent extends Fragment {
         String res = "";
         String ser = "";
         for (int i = type.length() - 1; i > 0; i--) {
-            if (type.charAt(i) == '/' || type.charAt(i) == '-' ||type.charAt(i)=='.') {
+            if (type.charAt(i) == '/' || type.charAt(i) == '-' || type.charAt(i) == '.') {
                 break;
             }
             ser += type.charAt(i);
@@ -74,17 +86,37 @@ public class fragCourseContent extends Fragment {
         for (int i = ser.length() - 1; i > -1; i--) {
             res += ser.charAt(i);
         }
-        if(res.equals("msword")){
-         res="doc";
+        if (res.equals("msword")) {
+            res = "doc";
         }
-        if(res.equals("powerpoint")||res.equals("mspowerpoint")){
-            res="ppt";
+        if (res.equals("powerpoint") || res.equals("mspowerpoint")) {
+            res = "ppt";
         }
-        if(res.equals("excel")||res.equals("msexcel")||res.equals("sheet")){
-            res="xls";
+        if (res.equals("excel") || res.equals("msexcel") || res.equals("sheet")) {
+            res = "xls";
         }
         System.out.println("extension: " + res);
         return res;
+    }
+
+    public void getMaterial() {
+        db.collection("courses").document(courseId).collection("material")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        myListData.add(new material(document.getId(), Objects.requireNonNull(document.getString("name"))
+                                , document.getString("extension"), document.getString("type")));
+                        System.out.println("-----------------------------------");
+                    }
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                    Toast.makeText(getContext(), "documents failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -104,6 +136,7 @@ public class fragCourseContent extends Fragment {
         System.out.println("temp: " + temp);
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         final String messagePushID = "" + System.currentTimeMillis();
+        materialName=messagePushID + "." + getExt(mimeType);
         // Here we are uploading the pdf in firebase storage with the name of current time
         final StorageReference filepath = storageReference.child(messagePushID + "." + getExt(mimeType));
         Toast.makeText(getContext(), filepath.getName(), Toast.LENGTH_SHORT).show();
@@ -115,7 +148,7 @@ public class fragCourseContent extends Fragment {
                     throw task.getException();
                 }
                 dialog.setProgress(50);
-                System.out.println("filepath.getDownloadUrl(): "+ filepath.getDownloadUrl());
+                System.out.println("filepath.getDownloadUrl(): " + filepath.getDownloadUrl());
                 return filepath.getDownloadUrl();
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -123,6 +156,31 @@ public class fragCourseContent extends Fragment {
             public void onComplete(@NonNull Task<Uri> task) {
                 dialog.setProgress(80);
                 if (task.isSuccessful()) {
+                    Map<String, Object> material = new HashMap<>();
+                    material.put("name", materialName);
+                    material.put("id", materialName);
+                    material.put("timestamp", FieldValue.serverTimestamp());
+                    material.put("extension", getExt(mimeType));
+                    db.collection("courses").document(courseId).collection("material").
+                            document().set(material)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "user added " + task.getResult());
+                                        System.out.println("user added in db courses collection: " + task.getResult());
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error adding document", e);
+                                    System.out.println("--------------------------------");
+                                    System.out.println("Course doesn't added " + e.toString());
+                                    System.out.println("--------------------------------");
+                                }
+                            });
                     // After uploading is done it progress
                     // dialog box will be dismissed
                     dialog.dismiss();

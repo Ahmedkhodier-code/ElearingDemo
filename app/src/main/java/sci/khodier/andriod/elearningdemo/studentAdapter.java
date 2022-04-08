@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHolder> {
-    private ArrayList<material> listdata;
+public class studentAdapter extends RecyclerView.Adapter<studentAdapter.ViewHolder> {
+    private ArrayList<student> listdata;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     private static final String TAG = "ReadAndWriteSnippets";
@@ -37,7 +37,7 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
     DocumentReference ref;
 
     // RecyclerView recyclerView;
-    public materialAdapter(ArrayList<material> listdata, Context context) {
+    public studentAdapter(ArrayList<student> listdata, Context context) {
         this.listdata = listdata;
         this.context = context;
     }
@@ -53,12 +53,14 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final material currentCourse = listdata.get(position);
-        holder.cousreName.setText(listdata.get(position).getName());
+        final student currentCourse = listdata.get(position);
+        holder.Name.setText(listdata.get(position).getName());
+        String name=listdata.get(position).getName();
+        holder.Email.setText(listdata.get(position).getEmail());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "clicked on pdf", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "clicked on student"+name, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -69,12 +71,13 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView cousreName;
+        public TextView Name , Email;
         public RelativeLayout relativeLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.cousreName = (TextView) itemView.findViewById(R.id.name);
+            this.Name = (TextView) itemView.findViewById(R.id.name);
+            this.Email=itemView.findViewById(R.id.creator);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         }
     }
