@@ -31,6 +31,7 @@ public class ActiveCourse extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
+        replaceFragment(new fragHomeCourse());
 
     }
 
@@ -58,16 +59,13 @@ public class ActiveCourse extends AppCompatActivity implements NavigationView.On
             case R.id.nav_homeCourse:
                 replaceFragment(new fragHomeCourse());
                 return true;
-
             case R.id.nav_tools:
                 replaceFragment(new fragCourseTools());
                 return true;
             case R.id.nav_cont:
                 replaceFragment(new fragCourseContent());
                 return true;
-
         }
-
         return false;
     }
 }

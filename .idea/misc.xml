@@ -12,7 +12,7 @@
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/half_circle.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/round2_button.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/drawable/round3_button.xml" value="0.2911458333333333" />
-        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/active_course.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/active_course.xml" value="0.264" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_firebase_ui.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_home.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/activity_login.xml" value="0.15579710144927536" />
@@ -32,6 +32,7 @@
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_reg_course.xml" value="0.264" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_settings.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_signup.xml" value="0.275" />
+        <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/frag_upload_martial.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_courses.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_dashboard.xml" value="0.275" />
         <entry key="..\:/Users/ahmed/AndroidStudioProjects/ElearingDemo/app/src/main/res/layout/fragment_home.xml" value="0.275" />

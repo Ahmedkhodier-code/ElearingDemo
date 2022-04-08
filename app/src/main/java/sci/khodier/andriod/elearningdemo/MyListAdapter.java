@@ -45,6 +45,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "ReadAndWriteSnippets";
     Context context;
+    String role="";
     DocumentReference ref;
 
     // RecyclerView recyclerView;
@@ -83,7 +84,6 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     }
 
     public String getRule() {
-        final String[] res = {""};
         ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -91,14 +91,15 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        res[0] ="" + doc.get("role");
+                        role = doc.get("role") + "";
                     } else {
                         Log.d("Document", "No data");
                     }
                 }
             }
         });
-        return res[0];
+        System.out.println("the role is :"+ role);
+        return role;
     }
 
     @Override
