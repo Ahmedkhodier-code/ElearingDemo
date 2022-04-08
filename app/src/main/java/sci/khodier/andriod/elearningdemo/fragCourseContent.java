@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,7 @@ import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.sql.SQLOutput;
+import java.util.ArrayList;
 
 public class fragCourseContent extends Fragment {
     private static final int RESULT_OK = 1;
@@ -30,15 +32,16 @@ public class fragCourseContent extends Fragment {
     ProgressDialog dialog;
     String courseId;
     String materialId;
+    ArrayList<material> myListData = new ArrayList<>();
     fragCourseContent(String courseId) {
         this.courseId = courseId;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rooView = inflater.inflate(R.layout.frag_course_content, container, false);
+        View rootView = inflater.inflate(R.layout.frag_course_content, container, false);
         // Inflate the layout for this fragment
-        upload = rooView.findViewById(R.id.uploadpdf);
+        upload = rootView.findViewById(R.id.uploadpdf);
         // After Clicking on this we will be
         // redirected to choose pdf
         upload.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +53,13 @@ public class fragCourseContent extends Fragment {
                 startActivityForResult(galleryIntent, 1);
             }
         });
-        return rooView;
+
+        RecyclerView recyclerView = rootView.findViewById(R.id.material);
+        materialAdapter adapter = new materialAdapter(myListData, getContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+        return rootView;
     }
 
     public String getExt(String type) {

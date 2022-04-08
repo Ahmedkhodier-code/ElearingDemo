@@ -92,7 +92,7 @@ public class fragCourse extends Fragment implements View.OnClickListener {
         });
         addCourse.setOnClickListener(this);
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
-        MyListAdapter adapter = new MyListAdapter(myListData, context);
+        courseAdapter adapter = new courseAdapter(myListData, context);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
