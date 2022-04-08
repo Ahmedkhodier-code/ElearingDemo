@@ -17,6 +17,10 @@ public class fragHomeCourse extends Fragment {
     TextView courseName, addTask, announcements, addAnnouncements, task;
     TextInputLayout ann, myTask;
     Button saveTask, saveAnn;
+    String courseId;
+    fragHomeCourse(String courseId){
+        this.courseId=courseId;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

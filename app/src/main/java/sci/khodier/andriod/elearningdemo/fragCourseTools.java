@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class fragCourseTools extends Fragment {
+    String courseId;
+    fragCourseTools(String courseId){
+        this.courseId=courseId;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

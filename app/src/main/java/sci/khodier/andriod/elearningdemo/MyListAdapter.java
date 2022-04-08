@@ -65,20 +65,16 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Course myListData = listdata.get(position);
+        final Course currentCourse = listdata.get(position);
         holder.cousreName.setText(listdata.get(position).getName());
         holder.creator.setText("creator: " + listdata.get(position).getCreator());
         holder.setImageView(listdata.get(position).getImg());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (getRule().equals("Instructor")) {
                     Intent intent = new Intent(context , ActiveCourse.class);
-                    intent.putExtra("","");
+                    intent.putExtra("courseId",currentCourse.getId());
                     context.startActivity(intent);
-
-                }
-                Toast.makeText(view.getContext(), "click on item: " + myListData.getName(), Toast.LENGTH_LONG).show();
             }
         });
     }

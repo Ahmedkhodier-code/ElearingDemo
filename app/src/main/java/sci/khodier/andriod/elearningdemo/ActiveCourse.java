@@ -18,7 +18,7 @@ public class ActiveCourse extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     NavigationView navigationView;
-
+    String courseId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +29,11 @@ public class ActiveCourse extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+        courseId = getIntent().getExtras().getString("courseId", "Default");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
-        replaceFragment(new fragHomeCourse());
+        replaceFragment(new fragHomeCourse(courseId));
+
 
     }
 
@@ -57,13 +59,13 @@ public class ActiveCourse extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         switch (item.getItemId()) {
             case R.id.nav_homeCourse:
-                replaceFragment(new fragHomeCourse());
+                replaceFragment(new fragHomeCourse(courseId));
                 return true;
             case R.id.nav_tools:
-                replaceFragment(new fragCourseTools());
+                replaceFragment(new fragCourseTools(courseId));
                 return true;
             case R.id.nav_cont:
-                replaceFragment(new fragCourseContent());
+                replaceFragment(new fragCourseContent(courseId));
                 return true;
         }
         return false;

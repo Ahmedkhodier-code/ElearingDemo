@@ -28,11 +28,14 @@ public class fragCourseContent extends Fragment {
     ImageView upload;
     Uri imageuri = null;
     ProgressDialog dialog;
-    private String pathToFile = "";
+    String courseId;
+    String materialId;
+    fragCourseContent(String courseId) {
+        this.courseId = courseId;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rooView = inflater.inflate(R.layout.frag_course_content, container, false);
         // Inflate the layout for this fragment
         upload = rooView.findViewById(R.id.uploadpdf);
@@ -50,68 +53,81 @@ public class fragCourseContent extends Fragment {
         return rooView;
     }
 
-    public String getEXt(String path) {
+    public String getExt(String type) {
         String res = "";
-        boolean flag=false;
-        for(int i =0;i<path.length();i++){
-            if(flag){
-                res+=path.charAt(i);
+        String ser = "";
+        for (int i = type.length() - 1; i > 0; i--) {
+            if (type.charAt(i) == '/' || type.charAt(i) == '-' ||type.charAt(i)=='.') {
+                break;
             }
-            if(path.charAt(i)=='.'){
-                flag=true;
-            }
+            ser += type.charAt(i);
         }
-        System.out.println("the extension is: " + res);
+        for (int i = ser.length() - 1; i > -1; i--) {
+            res += ser.charAt(i);
+        }
+        if(res.equals("msword")){
+         res="doc";
+        }
+        if(res.equals("powerpoint")||res.equals("mspowerpoint")){
+            res="ppt";
+        }
+        if(res.equals("excel")||res.equals("msexcel")||res.equals("sheet")){
+            res="xls";
+        }
+        System.out.println("extension: " + res);
         return res;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            // Here we are initialising the progress dialog box
-            dialog = new ProgressDialog(getContext());
-            dialog.setMessage("Uploading");
-
-            // this will show message uploading
-            // while pdf is uploading
-            pathToFile = data.getDataString();
-            dialog.show();
-            imageuri = data.getData();
-            final String timestamp = "" + System.currentTimeMillis();
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-            final String messagePushID = timestamp;
-            Toast.makeText(getContext(), imageuri.toString(), Toast.LENGTH_SHORT).show();
-
-            // Here we are uploading the pdf in firebase storage with the name of current time
-            final StorageReference filepath = storageReference.child(messagePushID + "." + getEXt(pathToFile));
-            Toast.makeText(getContext(), filepath.getName(), Toast.LENGTH_SHORT).show();
-            filepath.putFile(imageuri).continueWithTask(new Continuation() {
-                @Override
-                public Object then(@NonNull Task task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-                    return filepath.getDownloadUrl();
+        // Here we are initialising the progress dialog box
+        dialog = new ProgressDialog(getContext());
+        dialog.setMessage("Uploading pdf");
+        // this will show message uploading
+        // while pdf is uploading
+        dialog.show();
+        dialog.setProgress(0);
+        imageuri = data.getData();
+        String mimeType = getContext().getContentResolver().getType(imageuri);
+        System.out.println("mimeType: " + mimeType);
+        String temp = data.getStringExtra("path");
+        System.out.println("temp: " + temp);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        final String messagePushID = "" + System.currentTimeMillis();
+        // Here we are uploading the pdf in firebase storage with the name of current time
+        final StorageReference filepath = storageReference.child(messagePushID + "." + getExt(mimeType));
+        Toast.makeText(getContext(), filepath.getName(), Toast.LENGTH_SHORT).show();
+        filepath.putFile(imageuri).continueWithTask(new Continuation() {
+            @Override
+            public Object then(@NonNull Task task) throws Exception {
+                dialog.setProgress(30);
+                if (!task.isSuccessful()) {
+                    throw task.getException();
                 }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        // After uploading is done it progress
-                        // dialog box will be dismissed
-                        dialog.dismiss();
-                        Uri uri = task.getResult();
-                        String myurl;
-                        myurl = uri.toString();
-                        System.out.println("myurl" + myurl);
-                        Toast.makeText(getContext(), "Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        dialog.dismiss();
-                        Toast.makeText(getContext(), "UploadedFailed", Toast.LENGTH_SHORT).show();
-                    }
+                dialog.setProgress(50);
+                System.out.println("filepath.getDownloadUrl(): "+ filepath.getDownloadUrl());
+                return filepath.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                dialog.setProgress(80);
+                if (task.isSuccessful()) {
+                    // After uploading is done it progress
+                    // dialog box will be dismissed
+                    dialog.dismiss();
+                    Uri uri = task.getResult();
+                    String myurl;
+                    myurl = uri.toString();
+                    System.out.println("myurl" + myurl);
+                    dialog.setProgress(100);
+                    Toast.makeText(getContext(), "Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    dialog.dismiss();
+                    Toast.makeText(getContext(), "UploadedFailed", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+            }
+        });
     }
 }
