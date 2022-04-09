@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +44,7 @@ public class fragCourseContent extends Fragment {
     String courseId , materialId , materialName;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<material> myListData = new ArrayList<>();
+    View rootView;
     private static final String TAG = "ReadAndWriteSnippets";
 
     fragCourseContent(String courseId) {
@@ -50,18 +53,14 @@ public class fragCourseContent extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.frag_course_content, container, false);
+         rootView = inflater.inflate(R.layout.frag_course_content, container, false);
         // Inflate the layout for this fragment
         upload = rootView.findViewById(R.id.uploadpdf);
         // After Clicking on this we will be
         // redirected to choose pdf
 
         getMaterial();
-        RecyclerView recyclerView = rootView.findViewById(R.id.material);
-        materialAdapter adapter = new materialAdapter(myListData, getContext());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
+
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +98,8 @@ public class fragCourseContent extends Fragment {
         return res;
     }
 
+
+
     public void getMaterial() {
         db.collection("courses").document(courseId).collection("material")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -107,10 +108,17 @@ public class fragCourseContent extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
-                        myListData.add(new material(document.getId(), Objects.requireNonNull(document.getString("name"))
-                                , document.getString("extension"), document.getString("type")));
+                        myListData.add(new material(document.getId(),
+                                Objects.requireNonNull(document.getString("name"))
+                                , document.getString("extension"),
+                                document.getString("type") , document.getString("courseId")));
                         System.out.println("-----------------------------------");
                     }
+                    RecyclerView recyclerView = rootView.findViewById(R.id.material);
+                    materialAdapter adapter = new materialAdapter(myListData, getContext());
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(adapter);
                 } else {
                     Log.w(TAG, "Error getting documents.", task.getException());
                     Toast.makeText(getContext(), "documents failed.", Toast.LENGTH_SHORT).show();
@@ -161,6 +169,7 @@ public class fragCourseContent extends Fragment {
                     material.put("id", materialName);
                     material.put("timestamp", FieldValue.serverTimestamp());
                     material.put("extension", getExt(mimeType));
+                    material.put("courseId",courseId);
                     db.collection("courses").document(courseId).collection("material").
                             document().set(material)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -168,7 +177,6 @@ public class fragCourseContent extends Fragment {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Log.d(TAG, "user added " + task.getResult());
-                                        System.out.println("user added in db courses collection: " + task.getResult());
                                     }
                                 }
                             })

@@ -31,11 +31,15 @@
         android:layout_marginEnd="28dp"
         />
 
-    <ImageView
-        android:id="@+id/img"
-        android:layout_width="140dp"
-        android:layout_height="90dp"
+    <Button
+        android:id="@+id/deleteBtn"
+        android:gravity="center"
+        android:background="@drawable/round3_button"
+        android:textColor="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
+        android:text="delete"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/name"
         android:scaleType="centerCrop" />

@@ -64,7 +64,9 @@ public class fragCourseTools extends Fragment implements View.OnClickListener {
                     studentAdapter adapter = new studentAdapter(myListData, getContext());
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.setAdapter(adapter);} else {
+                    recyclerView.setAdapter(adapter);
+                }
+                else {
                     Log.w(TAG, "Error getting documents.", task.getException());
                     Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
                 }
