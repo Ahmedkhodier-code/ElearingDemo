@@ -7,6 +7,29 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imghexagon"
+            android:layout_width="140dp"
+            android:layout_height="212dp"
+            android:layout_gravity="right"
+            android:contentDescription="@android:string/ok"
+            android:src="@drawable/hexagone1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="120dp"
+            android:contentDescription="@android:string/ok"
+            android:scaleType="fitXY"
+            android:src="@drawable/hexagone2" />
+
+
+    </FrameLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -25,3 +48,5 @@
         android:layout_gravity="start"
         app:menu="@menu/navigation_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
+
+

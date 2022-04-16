@@ -46,11 +46,32 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
     Context context;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    DocumentReference ref;
+    String role = "";
 
     // RecyclerView recyclerView;
     public materialAdapter(ArrayList<material> listdata, Context context) {
         this.listdata = listdata;
         this.context = context;
+    }
+
+    public String getRule() {
+        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        role = doc.get("role") + "";
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
+        System.out.println("the role is :" + role);
+        return role;
     }
 
 
@@ -70,6 +91,9 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
         String materialName = listdata.get(position).getName();
         String materialId = listdata.get(position).getId();
         String courseId = listdata.get(position).getCourseId();
+        if (getRule().equals("Student")) {
+            holder.del.setVisibility(View.INVISIBLE);
+        }
         int idx = position;
         holder.del.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +111,8 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    System.out.println("courseId: "+courseId);
-                                                    System.out.println("materialId: "+materialId);
+                                                    System.out.println("courseId: " + courseId);
+                                                    System.out.println("materialId: " + materialId);
                                                     listdata.remove(idx);
                                                     Toast.makeText(context, "Deleted Successfully",
                                                             Toast.LENGTH_SHORT).show();

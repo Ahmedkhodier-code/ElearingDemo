@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +24,11 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -45,10 +50,36 @@ public class fragCourseContent extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<material> myListData = new ArrayList<>();
     View rootView;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    DocumentReference ref;
+    String role = "";
     private static final String TAG = "ReadAndWriteSnippets";
 
     fragCourseContent(String courseId) {
         this.courseId = courseId;
+    }
+
+    public String getRule() {
+        db.collection("users").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "currentUser data: " + document.getData());
+                        role=document.getString("role");
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+        System.out.println("the role is :"+ role);
+        return role;
     }
 
     @Override
@@ -56,11 +87,10 @@ public class fragCourseContent extends Fragment {
          rootView = inflater.inflate(R.layout.frag_course_content, container, false);
         // Inflate the layout for this fragment
         upload = rootView.findViewById(R.id.uploadpdf);
-        // After Clicking on this we will be
-        // redirected to choose pdf
-
+        if(getRule()=="Student") {
+            rootView.findViewById(R.id.upload).setVisibility(View.INVISIBLE);
+        }
         getMaterial();
-
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,6 +228,7 @@ public class fragCourseContent extends Fragment {
                     System.out.println("myurl" + myurl);
                     dialog.setProgress(100);
                     Toast.makeText(getContext(), "Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                    getMaterial();
                 } else {
                     dialog.dismiss();
                     Toast.makeText(getContext(), "UploadedFailed", Toast.LENGTH_SHORT).show();

@@ -137,27 +137,6 @@ public class fragAddCourse extends Fragment implements View.OnClickListener {
         course.put("password", password);
 
         // Add a new document with a generated ID
-//        db.collection("users").document(currentUser.getEmail()).collection("courses").document().set(course)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d(TAG, "user added " + task.getResult());
-//                            System.out.println("user added in db in his course collection: " + task.getResult());
-//                            checkCourse = true;
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error adding document", e);
-//                        checkCourse = false;
-//                        System.out.println("--------------------------------");
-//                        System.out.println("Course doesn't added " + e.toString());
-//                        System.out.println("--------------------------------");
-//                    }
-//                });
         db.collection("courses").document().set(course)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

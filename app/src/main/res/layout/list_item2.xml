@@ -32,6 +32,7 @@
         />
 
     <Button
+
         android:id="@+id/deleteBtn"
         android:gravity="center"
         android:background="@drawable/round3_button"
