@@ -8,11 +8,13 @@
 
 
     <TextView
+        android:layout_gravity="left"
         android:id="@+id/courseName"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:text="course name: " />
+         />
 
 
     <LinearLayout

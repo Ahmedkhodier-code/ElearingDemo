@@ -50,6 +50,7 @@ public class fragHomeCourse extends Fragment {
         myTask = rootView.findViewById(R.id.myTask);
         saveTask = rootView.findViewById(R.id.saveTask);
         saveAnn = rootView.findViewById(R.id.saveAnn);
+        courseName = rootView.findViewById(R.id.courseName);
         loadCourse();
         saveAnn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,8 +180,9 @@ public class fragHomeCourse extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        courseName.setText(doc.get("name") + "");
-
+                        String s = doc.getString("name");
+                        System.out.println("name is " + s);
+                        courseName.setText("welcome to " + s);
                     } else {
                         Log.d("Document", "No data");
                     }

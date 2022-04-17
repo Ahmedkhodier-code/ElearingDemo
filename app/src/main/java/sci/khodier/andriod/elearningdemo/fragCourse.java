@@ -43,7 +43,6 @@ public class fragCourse extends Fragment implements View.OnClickListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference ref;
     ArrayList<Course> myListData = new ArrayList<>();
-    Bitmap bitmap, bt;
     View rootView;
     String role;
     private static final String TAG = "ReadAndWriteSnippets";
