@@ -38,7 +38,6 @@ public class fragHomeCourse extends Fragment {
     fragHomeCourse(String courseId) {
         this.courseId = courseId;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
