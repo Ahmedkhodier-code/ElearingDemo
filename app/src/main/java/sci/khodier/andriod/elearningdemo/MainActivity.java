@@ -15,9 +15,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     BottomNavigationView bottomNavigationView;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    fragCourse Courses = new fragCourse(this ,currentUser);
-    profile_frag profile = new profile_frag(this , currentUser);
+    fragCourse Courses = new fragCourse(this, currentUser);
+    profile_frag profile = new profile_frag(this, currentUser);
     fragSettings settings = new fragSettings();
+    frag_ActivityStream activity = new frag_ActivityStream(this, currentUser);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
             case R.id.message:
                 Toast.makeText(this, "you clicked on messages", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.activity:
+                getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment, activity).commit();
                 return true;
         }
         return false;

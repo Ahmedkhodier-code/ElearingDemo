@@ -28,10 +28,10 @@ import java.util.Objects;
 
 public class fragHomeCourse extends Fragment {
     View rootView;
-    TextView courseName, addTask, announcements, addAnnouncements, task;
+    TextView courseName, addTask, announcements, addAnnouncements;
     TextInputLayout ann, myTask;
     Button saveTask, saveAnn;
-    String courseId;
+    String courseId , nameOfCourse;
     DocumentReference ref;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -45,7 +45,7 @@ public class fragHomeCourse extends Fragment {
         rootView = inflater.inflate(R.layout.frag_home_course, container, false);
         announcements = rootView.findViewById(R.id.announcements);
         ann = rootView.findViewById(R.id.ann);
-        task = rootView.findViewById(R.id.task);
+        addTask = rootView.findViewById(R.id.task);
         myTask = rootView.findViewById(R.id.myTask);
         saveTask = rootView.findViewById(R.id.saveTask);
         saveAnn = rootView.findViewById(R.id.saveAnn);
@@ -61,6 +61,7 @@ public class fragHomeCourse extends Fragment {
                     } else {
                         final String TAG = "DocSnippets";
                         Map<String, Object> ann = new HashMap<>();
+                        ann.put("courseName",nameOfCourse);
                         ann.put("message", announcements.getText().toString());
                         ann.put("courseId", courseId);
                         ann.put("timestamp", FieldValue.serverTimestamp());
@@ -72,6 +73,9 @@ public class fragHomeCourse extends Fragment {
                                         if (task.isSuccessful()) {
                                             Log.d(TAG, "announcements added " + task.getResult());
                                             System.out.println("user added in db announcements collection: " + task.getResult());
+                                            announcements.setText("");
+                                            Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
+
                                         }
                                     }
                                 })
@@ -112,14 +116,14 @@ public class fragHomeCourse extends Fragment {
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!task.getText().toString().equals("") || !task.getText().toString().isEmpty()) {
-                    if (task.getText().toString().length() < 10) {
+                if (!addTask.getText().toString().equals("") || !addTask.getText().toString().isEmpty()) {
+                    if (addTask.getText().toString().length() < 10) {
                         Toast.makeText(getContext(), "your message is too short!!", Toast.LENGTH_SHORT).show();
 
                     } else {
                         final String TAG = "DocSnippets";
                         Map<String, Object> ann = new HashMap<>();
-                        ann.put("message", task.getText().toString());
+                        ann.put("message", addTask.getText().toString());
                         ann.put("courseId", courseId);
                         ann.put("timestamp", FieldValue.serverTimestamp());
                         // Add a new document with a generated ID
@@ -130,6 +134,8 @@ public class fragHomeCourse extends Fragment {
                                         if (task.isSuccessful()) {
                                             Log.d(TAG, "tasks added " + task.getResult());
                                             System.out.println("user added in db announcements collection: " + task.getResult());
+                                            addTask.setText("");
+                                            Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 })
@@ -180,7 +186,7 @@ public class fragHomeCourse extends Fragment {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         String s = doc.getString("name");
-                        System.out.println("name is " + s);
+                        nameOfCourse= s;
                         courseName.setText("welcome to " + s);
                     } else {
                         Log.d("Document", "No data");
