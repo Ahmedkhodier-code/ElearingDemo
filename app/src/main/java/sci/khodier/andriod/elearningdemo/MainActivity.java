@@ -3,10 +3,16 @@ package sci.khodier.andriod.elearningdemo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,16 +26,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     profile_frag profile = new profile_frag(this, currentUser);
     fragSettings settings = new fragSettings();
     frag_ActivityStream activity = new frag_ActivityStream(this, currentUser);
-    FirebaseMessaging firebaseMessaging=  FirebaseMessaging.getInstance();
-
+    private static final String TAG = "PushNotification";
+    private static final String CHANNEL_ID = "101";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        firebaseMessaging.subscribeToTopic("new_user_forums");
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.course);
+        createNotificationChannel();
+        getToken();
     }
 
     @Override
@@ -57,5 +64,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
         }
         return false;
+    }
+    private void getToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                //If task is failed then
+                if (!task.isSuccessful()) {
+                    Log.d(TAG, "onComplete: Failed to get the Token");
+                }
+
+                //Token
+                String token = task.getResult();
+                Log.d(TAG, "onComplete: " + token);
+            }
+        });
+    }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "firebaseNotifChannel";
+            String description = "Receve Firebase notification";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
