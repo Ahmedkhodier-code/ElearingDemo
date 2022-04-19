@@ -21,6 +21,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +36,9 @@ public class fragHomeCourse extends Fragment {
     String courseId , nameOfCourse;
     DocumentReference ref;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    FirebaseMessaging fm = FirebaseMessaging.getInstance();
+    final String SENDER_ID = "YOUR_SENDER_ID";
+    final int messageId = 0; // Increment for each
     fragHomeCourse(String courseId) {
         this.courseId = courseId;
     }
@@ -76,6 +80,11 @@ public class fragHomeCourse extends Fragment {
                                             announcements.setText("");
                                             Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
 
+                                            fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
+                                                    .setMessageId(Integer.toString(messageId))
+                                                    .addData("my_message", announcements.getText().toString())
+                                                    .addData("my_action","CLICK TO SEE")
+                                                    .build());
                                         }
                                     }
                                 })
@@ -136,6 +145,11 @@ public class fragHomeCourse extends Fragment {
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                             addTask.setText("");
                                             Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
+                                            fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
+                                                    .setMessageId(Integer.toString(messageId))
+                                                    .addData("my_message", addTask.getText().toString())
+                                                    .addData("my_action","CLICK TO SEE")
+                                                    .build());
                                         }
                                     }
                                 })

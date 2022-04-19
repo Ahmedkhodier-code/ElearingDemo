@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     BottomNavigationView bottomNavigationView;
@@ -19,11 +20,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     profile_frag profile = new profile_frag(this, currentUser);
     fragSettings settings = new fragSettings();
     frag_ActivityStream activity = new frag_ActivityStream(this, currentUser);
+    FirebaseMessaging firebaseMessaging=  FirebaseMessaging.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firebaseMessaging.subscribeToTopic("new_user_forums");
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.course);
