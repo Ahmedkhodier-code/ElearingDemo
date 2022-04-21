@@ -41,6 +41,7 @@ public class frag_ActivityStream extends Fragment {
     }
 
     public void getAnn() {
+        myListData = new ArrayList<>();
         db.collection("announcements")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -49,7 +50,33 @@ public class frag_ActivityStream extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         myListData.add(new announcements(document.getString("message"),
-                                document.get("timestamp")+"" ,document.getString("courseName"), "announcements"));
+                                document.get("date")+"" ,document.getString("courseName"), "announcements"));
+                        System.out.println("-------------------/////----------------");
+                    }
+                    RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
+                    AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                    Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void getTasks() {
+        myListData = new ArrayList<>();
+        db.collection("tasks")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        myListData.add(new announcements(document.getString("message"),
+                                document.get("date")+"" ,document.getString("courseName"), "tasks"));
                         System.out.println("-------------------/////----------------");
                     }
                     RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
@@ -72,11 +99,14 @@ public class frag_ActivityStream extends Fragment {
          rootview = inflater.inflate(R.layout.frag__activity_stream, container, false);
         ann = rootview.findViewById(R.id.annBtn);
         task = rootview.findViewById(R.id.taskBtn);
+        myListData = new ArrayList<>();
         ann.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ann.setTextColor(getResources().getColor(R.color.colorAccent));
                 task.setTextColor(getResources().getColor(R.color.colorPrimary));
+                getAnn();
+
             }
         });
         task.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +114,7 @@ public class frag_ActivityStream extends Fragment {
             public void onClick(View v) {
                 task.setTextColor(getResources().getColor(R.color.colorAccent));
                 ann.setTextColor(getResources().getColor(R.color.colorPrimary));
+                getTasks();
             }
         });
         getAnn();

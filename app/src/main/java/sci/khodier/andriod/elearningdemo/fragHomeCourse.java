@@ -24,7 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -63,12 +66,14 @@ public class fragHomeCourse extends Fragment {
                         Toast.makeText(getContext(), "your message is too short!!", Toast.LENGTH_SHORT).show();
 
                     } else {
+                        SimpleDateFormat sdf = new SimpleDateFormat("   yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+                        String currentDateandTime = sdf.format(new Date());
                         final String TAG = "DocSnippets";
                         Map<String, Object> ann = new HashMap<>();
                         ann.put("courseName",nameOfCourse);
                         ann.put("message", announcements.getText().toString());
                         ann.put("courseId", courseId);
-                        ann.put("timestamp", FieldValue.serverTimestamp());
+                        ann.put("date", currentDateandTime);
                         // Add a new document with a generated ID
                         db.collection("announcements").document().set(ann)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -114,7 +119,7 @@ public class fragHomeCourse extends Fragment {
                                         Log.w(TAG, "Error adding document", e);
                                         System.out.println("--------------------------------");
                                         System.out.println("announcements doesn't added " + e.toString());
-                                        System.out.println("--------------------------------");
+                                        System.out.println("-----   ---------------------------");
                                     }
                                 });
                     }
@@ -130,11 +135,13 @@ public class fragHomeCourse extends Fragment {
                         Toast.makeText(getContext(), "your message is too short!!", Toast.LENGTH_SHORT).show();
 
                     } else {
+                        SimpleDateFormat sdf = new SimpleDateFormat("   yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+                        String currentDateandTime = sdf.format(new Date());
                         final String TAG = "DocSnippets";
                         Map<String, Object> ann = new HashMap<>();
                         ann.put("message", addTask.getText().toString());
                         ann.put("courseId", courseId);
-                        ann.put("timestamp", FieldValue.serverTimestamp());
+                        ann.put("date", currentDateandTime);
                         // Add a new document with a generated ID
                         db.collection("tasks").document().set(ann)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
