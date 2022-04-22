@@ -1,8 +1,17 @@
 package sci.khodier.andriod.elearningdemo;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -36,15 +45,47 @@ public class fragHomeCourse extends Fragment {
     TextView courseName, addTask, announcements, addAnnouncements;
     TextInputLayout ann, myTask;
     Button saveTask, saveAnn;
-    String courseId , nameOfCourse;
+    String courseId, nameOfCourse;
     DocumentReference ref;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseMessaging fm = FirebaseMessaging.getInstance();
     final String SENDER_ID = "YOUR_SENDER_ID";
     final int messageId = 0; // Increment for each
+
     fragHomeCourse(String courseId) {
         this.courseId = courseId;
     }
+
+    private void sendNotification(String messageBody, String title) {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        String channelId = getString(R.string.default_notification_channel_id);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(getContext(), channelId)
+                        .setSmallIcon(R.drawable.notification)
+                        .setContentTitle(title)
+                        .setContentText(messageBody)
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager)
+                getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,7 +111,7 @@ public class fragHomeCourse extends Fragment {
                         String currentDateandTime = sdf.format(new Date());
                         final String TAG = "DocSnippets";
                         Map<String, Object> ann = new HashMap<>();
-                        ann.put("courseName",nameOfCourse);
+                        ann.put("courseName", nameOfCourse);
                         ann.put("message", announcements.getText().toString());
                         ann.put("courseId", courseId);
                         ann.put("date", currentDateandTime);
@@ -84,11 +125,12 @@ public class fragHomeCourse extends Fragment {
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                             announcements.setText("");
                                             Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
+                                            sendNotification("new announcement added click to see", "new announcement");
 
                                             fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
                                                     .setMessageId(Integer.toString(messageId))
                                                     .addData("my_message", announcements.getText().toString())
-                                                    .addData("my_action","CLICK TO SEE")
+                                                    .addData("my_action", "CLICK TO SEE")
                                                     .build());
                                         }
                                     }
@@ -108,6 +150,7 @@ public class fragHomeCourse extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            sendNotification("new announcement added click to see", "new announcement");
                                             Log.d(TAG, "announcements added " + task.getResult());
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                         }
@@ -152,10 +195,12 @@ public class fragHomeCourse extends Fragment {
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                             addTask.setText("");
                                             Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
+                                            sendNotification("new task added click to see", "new task");
+
                                             fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
                                                     .setMessageId(Integer.toString(messageId))
                                                     .addData("my_message", addTask.getText().toString())
-                                                    .addData("my_action","CLICK TO SEE")
+                                                    .addData("my_action", "CLICK TO SEE")
                                                     .build());
                                         }
                                     }
@@ -175,6 +220,8 @@ public class fragHomeCourse extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            sendNotification("new task added click to see", "new task");
+
                                             Log.d(TAG, "tasks added " + task.getResult());
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                         }
@@ -207,7 +254,7 @@ public class fragHomeCourse extends Fragment {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         String s = doc.getString("name");
-                        nameOfCourse= s;
+                        nameOfCourse = s;
                         courseName.setText("welcome to " + s);
                     } else {
                         Log.d("Document", "No data");
