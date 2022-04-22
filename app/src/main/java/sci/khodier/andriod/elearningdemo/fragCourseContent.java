@@ -214,7 +214,7 @@ public class fragCourseContent extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        sendNotification("new matrial added click to see","new content");
+                                    //    sendNotification("new matrial added click to see","new content");
                                         Log.d(TAG, "user added " + task.getResult());
                                     }
                                 }
