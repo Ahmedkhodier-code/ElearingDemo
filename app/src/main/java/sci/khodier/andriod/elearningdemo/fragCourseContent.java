@@ -36,8 +36,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -195,12 +199,15 @@ public class fragCourseContent extends Fragment {
             public void onComplete(@NonNull Task<Uri> task) {
                 dialog.setProgress(80);
                 if (task.isSuccessful()) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("   yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+                    String currentDateandTime = sdf.format(new Date());
                     Map<String, Object> material = new HashMap<>();
                     material.put("name", materialName);
                     material.put("id", materialName);
                     material.put("timestamp", FieldValue.serverTimestamp());
                     material.put("extension", getExt(mimeType));
                     material.put("courseId", courseId);
+                    material.put("time",currentDateandTime);
                     db.collection("courses").document(courseId).collection("material").
                             document().set(material)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
