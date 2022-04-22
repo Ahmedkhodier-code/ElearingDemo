@@ -4,22 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,7 +29,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +39,7 @@ public class fragCourseContent extends Fragment {
     ImageView upload;
     Uri imageuri = null;
     ProgressDialog dialog;
-    String courseId , materialId , materialName;
+    String courseId, materialId, materialName;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<material> myListData = new ArrayList<>();
     View rootView;
@@ -68,7 +61,7 @@ public class fragCourseContent extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "currentUser data: " + document.getData());
-                        role=document.getString("role");
+                        role = document.getString("role");
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -78,16 +71,16 @@ public class fragCourseContent extends Fragment {
             }
         });
 
-        System.out.println("the role is :"+ role);
+        System.out.println("the role is :" + role);
         return role;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-         rootView = inflater.inflate(R.layout.frag_course_content, container, false);
+        rootView = inflater.inflate(R.layout.frag_course_content, container, false);
         // Inflate the layout for this fragment
         upload = rootView.findViewById(R.id.uploadpdf);
-        if(getRule()=="Student") {
+        if (getRule() == "Student") {
             rootView.findViewById(R.id.upload).setVisibility(View.INVISIBLE);
         }
         getMaterial();
@@ -129,7 +122,6 @@ public class fragCourseContent extends Fragment {
     }
 
 
-
     public void getMaterial() {
         db.collection("courses").document(courseId).collection("material")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -140,8 +132,10 @@ public class fragCourseContent extends Fragment {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         myListData.add(new material(document.getId(),
                                 Objects.requireNonNull(document.getString("name"))
-                                , document.getString("extension"),
-                                document.getString("type") , document.getString("courseId")));
+                                , document.getString("extension")
+                                , document.getString("type")
+                                , document.getString("courseId"),
+                                document.getString("time")));
                         System.out.println("-----------------------------------");
                     }
                     RecyclerView recyclerView = rootView.findViewById(R.id.material);
@@ -174,7 +168,7 @@ public class fragCourseContent extends Fragment {
         System.out.println("temp: " + temp);
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         final String messagePushID = "" + System.currentTimeMillis();
-        materialName=messagePushID + "." + getExt(mimeType);
+        materialName = messagePushID + "." + getExt(mimeType);
         // Here we are uploading the pdf in firebase storage with the name of current time
         final StorageReference filepath = storageReference.child(messagePushID + "." + getExt(mimeType));
         Toast.makeText(getContext(), filepath.getName(), Toast.LENGTH_SHORT).show();
@@ -199,7 +193,7 @@ public class fragCourseContent extends Fragment {
                     material.put("id", materialName);
                     material.put("timestamp", FieldValue.serverTimestamp());
                     material.put("extension", getExt(mimeType));
-                    material.put("courseId",courseId);
+                    material.put("courseId", courseId);
                     db.collection("courses").document(courseId).collection("material").
                             document().set(material)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {

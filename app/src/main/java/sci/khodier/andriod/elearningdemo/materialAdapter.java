@@ -88,6 +88,7 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         final material currentCourse = listdata.get(position);
         holder.cousreName.setText(listdata.get(position).getName());
+        holder.time.setText(listdata.get(position).getTime());
         String materialName = listdata.get(position).getName();
         String materialId = listdata.get(position).getId();
         String courseId = listdata.get(position).getCourseId();
@@ -161,7 +162,7 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView cousreName;
+        public TextView cousreName , time;
         public RelativeLayout relativeLayout;
         public Button del;
 
@@ -169,6 +170,7 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
             super(itemView);
             del = itemView.findViewById(R.id.deleteBtn);
             this.cousreName = (TextView) itemView.findViewById(R.id.name);
+            this.time=itemView.findViewById(R.id.time);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         }
     }
