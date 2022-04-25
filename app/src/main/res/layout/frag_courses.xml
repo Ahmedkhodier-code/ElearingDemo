@@ -40,13 +40,13 @@
 
             </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left"
-                    android:text="The Courses"
-                    android:layout_marginLeft="20dp"
-                    android:textSize="25dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="20dp"
+                android:text="The Courses"
+                android:textSize="25dp" />
 
 
         </LinearLayout>
@@ -62,24 +62,29 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/add"
-        android:layout_width="40.7dp"
-        android:layout_height="45.3dp"
-        android:layout_gravity="right||bottom"
-        android:layout_margin="30dp"
-        android:clickable="true"
-        android:layout_marginLeft="27.3dp"
-        android:layout_marginRight="27.3dp"
-        android:background="@drawable/white_hexagone">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="15.3dp"
-            android:layout_gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/black_plus" />
 
+        <FrameLayout
+            android:id="@+id/add"
+            android:layout_width="40.7dp"
+            android:layout_height="45.3dp"
+            android:layout_marginTop="630dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/white_hexagone"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="15.3dp"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/black_plus" />
+
+        </FrameLayout>
     </FrameLayout>
 
 </FrameLayout>

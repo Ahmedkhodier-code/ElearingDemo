@@ -61,15 +61,16 @@ public class commentAdapter extends RecyclerView.Adapter<commentAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.list_item4, parent, false);
+
         ViewHolder viewHolder = new ViewHolder(listItem);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final comment currentAnn = listdata.get(position);
-        holder.commentText.setText(listdata.get(position).getCommentText());
-        holder.username.setText("" + listdata.get(position).getUsername());
+        final comment currentComment = listdata.get(position);
+        holder.commentText.setText(currentComment.getCommentText());
+        holder.username.setText(currentComment.getUsername());
         holder.time.setText(listdata.get(position).getTime());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +114,7 @@ public class commentAdapter extends RecyclerView.Adapter<commentAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             this.commentText = (TextView) itemView.findViewById(R.id.commentText);
-            this.username = (TextView) itemView.findViewById(R.id.message);
+            this.username = (TextView) itemView.findViewById(R.id.username);
             this.time = (TextView) itemView.findViewById(R.id.time);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         }
