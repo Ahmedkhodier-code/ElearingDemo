@@ -63,7 +63,6 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.google.firebase:firebase-analytics'
-
-
+    implementation 'com.github.arturogutierrez:badges:1.0.5@aar'
 
 }

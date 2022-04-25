@@ -6,8 +6,6 @@
     tools:context=".fragCourse">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -32,54 +30,28 @@
 
                 <TextView
                     android:id="@+id/name"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:text=""
                     android:textSize="20dp" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="left"
                     android:text="The Courses"
+                    android:layout_marginLeft="20dp"
                     android:textSize="25dp" />
 
-                <FrameLayout
-                    android:id="@+id/add"
-                    android:layout_width="40.7dp"
-                    android:layout_height="45.3dp"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="27.3dp"
-                    android:layout_marginRight="27.3dp"
-                    android:background="@drawable/white_hexagone">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="15.3dp"
-                        android:layout_gravity="center"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:src="@drawable/black_plus" />
-
-                </FrameLayout>
-
-            </LinearLayout>
 
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -88,5 +60,26 @@
         </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/add"
+        android:layout_width="40.7dp"
+        android:layout_height="45.3dp"
+        android:layout_gravity="right||bottom"
+        android:layout_margin="30dp"
+        android:clickable="true"
+        android:layout_marginLeft="27.3dp"
+        android:layout_marginRight="27.3dp"
+        android:background="@drawable/white_hexagone">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="15.3dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/black_plus" />
+
+    </FrameLayout>
 
 </FrameLayout>
