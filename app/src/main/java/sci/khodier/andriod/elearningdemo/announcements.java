@@ -1,17 +1,26 @@
 package sci.khodier.andriod.elearningdemo;
 
 public class announcements {
-    String message, time, courseName, type;
+    String message, time, courseName, type , id;
 
-    public announcements(String message, String time, String courseName, String type) {
+    public announcements(String message, String time, String courseName, String type, String id) {
         this.message = message;
         this.time = time;
         this.courseName = courseName;
         this.type = type;
+        this.id=id;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setMessage(String message) {

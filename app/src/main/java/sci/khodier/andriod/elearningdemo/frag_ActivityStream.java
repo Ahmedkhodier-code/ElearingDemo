@@ -50,8 +50,8 @@ public class frag_ActivityStream extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
-                        myListData.add(new announcements(document.getString("message"),
-                                document.get("date") + "", document.getString("courseName"), "announcements"));
+                        myListData.add(new announcements(document.getString("message"), document.get("date") + "",
+                                document.getString("courseName"), "announcements", document.getId()));
                         System.out.println("-------------------/////----------------");
                     }
                     RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
@@ -77,7 +77,8 @@ public class frag_ActivityStream extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         myListData.add(new announcements(document.getString("message"),
-                                document.get("date") + "", document.getString("courseName"), "tasks"));
+                                document.get("date") + "", document.getString("courseName"), "tasks",
+                                document.getId()));
                         System.out.println("-------------------/////----------------");
                     }
                     RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
@@ -94,7 +95,8 @@ public class frag_ActivityStream extends Fragment {
     }
 
     public String getRule() {
-        db.collection("users").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("users").document(currentUser.getEmail()).
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
