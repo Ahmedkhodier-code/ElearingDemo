@@ -10,17 +10,20 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,6 +37,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -50,14 +55,16 @@ public class fragCourseContent extends Fragment {
     ImageView upload;
     Uri imageuri = null;
     ProgressDialog dialog;
-    String courseId, materialId, materialName;
+    String courseId, materialName;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<material> myListData = new ArrayList<>();
     View rootView;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    DocumentReference ref;
-    String role = "";
+    final String SENDER_ID = "YOUR_SENDER_ID";
+    final int messageId = 0; // Increment for each
+    String role = "", nameOfCourse;
+    FirebaseMessaging fm = FirebaseMessaging.getInstance();
     private static final String TAG = "ReadAndWriteSnippets";
 
     fragCourseContent(String courseId) {
@@ -90,6 +97,7 @@ public class fragCourseContent extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.frag_course_content, container, false);
         // Inflate the layout for this fragment
+        loadCourse();
         upload = rootView.findViewById(R.id.uploadpdf);
         if (getRule() == "Student") {
             rootView.findViewById(R.id.upload).setVisibility(View.INVISIBLE);
@@ -207,14 +215,15 @@ public class fragCourseContent extends Fragment {
                     material.put("timestamp", FieldValue.serverTimestamp());
                     material.put("extension", getExt(mimeType));
                     material.put("courseId", courseId);
-                    material.put("time",currentDateandTime);
+                    material.put("time", currentDateandTime);
                     db.collection("courses").document(courseId).collection("material").
                             document().set(material)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                    //    sendNotification("new matrial added click to see","new content");
+                                        //    sendNotification("new matrial added click to see","new content");
+                                        uploadAnn();
                                         Log.d(TAG, "user added " + task.getResult());
                                     }
                                 }
@@ -245,7 +254,8 @@ public class fragCourseContent extends Fragment {
             }
         });
     }
-    private void sendNotification(String messageBody , String title) {
+
+    private void sendNotification(String messageBody, String title) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0 /* Request code */, intent,
@@ -262,7 +272,7 @@ public class fragCourseContent extends Fragment {
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =(NotificationManager)
+        NotificationManager notificationManager = (NotificationManager)
                 getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Since android Oreo notification channel is needed.
@@ -273,6 +283,85 @@ public class fragCourseContent extends Fragment {
             notificationManager.createNotificationChannel(channel);
         }
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+    public void uploadAnn() {
+        SimpleDateFormat sdf = new SimpleDateFormat("   yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+        String currentDateandTime = sdf.format(new Date());
+        final String TAG = "DocSnippets";
+        Map<String, Object> ann = new HashMap<>();
+        ann.put("courseName", nameOfCourse);
+        ann.put("message", "new material added");
+        ann.put("courseId", courseId);
+        ann.put("date", currentDateandTime);
+        // Add a new document with a generated ID
+        db.collection("announcements").document().set(ann)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "announcements added " + task.getResult());
+                            System.out.println("user added in db announcements collection: " + task.getResult());
+                            Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
+                            sendNotification("new announcement added click to see", "new announcement");
+
+                            fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
+                                    .setMessageId(Integer.toString(messageId))
+                                    .addData("my_message", "new material added")
+                                    .addData("my_action", "CLICK TO SEE")
+                                    .build());
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                        System.out.println("--------------------------------");
+                        System.out.println("announcements doesn't added " + e.toString());
+                        System.out.println("--------------------------------");
+                    }
+                });
+        db.collection("courses").document(courseId)
+                .collection("announcements").document().set(ann)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            sendNotification("new announcement added click to see", "new announcement");
+                            Log.d(TAG, "announcements added " + task.getResult());
+                            System.out.println("user added in db announcements collection: " + task.getResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                        System.out.println("--------------------------------");
+                        System.out.println("announcements doesn't added " + e.toString());
+                        System.out.println("-----   ---------------------------");
+                    }
+                });
+    }
+
+    public void loadCourse() {
+        DocumentReference ref = FirebaseFirestore.getInstance().collection("courses").document(courseId);
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        String s = doc.getString("name");
+                        nameOfCourse = s;
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
+
     }
 
 }
