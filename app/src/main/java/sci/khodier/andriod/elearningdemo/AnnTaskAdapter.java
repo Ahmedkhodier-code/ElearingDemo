@@ -105,6 +105,9 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
                                     //    sendNotification("new matrial added click to see","new content");
                                     listComment.add(new comment(holder.comment.getText().toString(), currentDateandTime, username));
                                     Log.d(TAG, "user added " + task.getResult());
+                                    holder.comment.setText("");
+                                    getComments(holder.recyclerView, annId);
+
                                 }
                             }
                         })
