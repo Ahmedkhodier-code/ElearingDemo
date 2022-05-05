@@ -1,6 +1,7 @@
 package sci.khodier.andriod.elearningdemo;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -57,7 +58,7 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
     Context context;
     String role = "";
     DocumentReference ref;
-
+    Fragment frag;
     // RecyclerView recyclerView;
 
     public AnnTaskAdapter(ArrayList<announcements> listdata, Context context) {
@@ -79,49 +80,23 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final announcements currentAnn = listdata.get(position);
-        listComment=new ArrayList<>();
+        listComment = new ArrayList<>();
         holder.cousreName.setText(listdata.get(position).getCourseName());
         holder.message.setText("" + listdata.get(position).getMessage());
         holder.time.setText(listdata.get(position).getTime());
         String annId = listdata.get(position).getId();
         getComments(holder.recyclerView, annId);
-        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
+        holder.uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getInfo();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
-                String currentDateandTime = sdf.format(new Date());
-                Map<String, Object> comment = new HashMap<>();
-                comment.put("commentText", holder.comment.getText().toString());
-                comment.put("username", username);
-                comment.put("time", currentDateandTime);
-                comment.put("annId",currentAnn.getId());
-                db.collection("announcements").document(annId).collection("comments").
-                        document().set(comment)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    //    sendNotification("new matrial added click to see","new content");
-                                    listComment.add(new comment(holder.comment.getText().toString(), currentDateandTime, username));
-                                    Log.d(TAG, "user added " + task.getResult());
-                                    holder.comment.setText("");
-                                    getComments(holder.recyclerView, annId);
-
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                                System.out.println("--------------------------------");
-                                System.out.println("Course doesn't added " + e.toString());
-                                System.out.println("--------------------------------");
-                            }
-                        });
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("application/*");
+                frag.startActivityForResult(galleryIntent, 1);
             }
         });
+
+
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +134,7 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
         });
     }
 
-    public  void getInfo() {
+    public void getInfo() {
         ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -183,8 +158,7 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView cousreName, message, time;
         public RelativeLayout relativeLayout;
-        public ImageView commentBtn;
-        public EditText comment;
+        public ImageView uploadBtn;
         public RecyclerView recyclerView;
 
         public ViewHolder(View itemView) {
@@ -192,8 +166,7 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
             this.cousreName = (TextView) itemView.findViewById(R.id.courseName);
             this.message = (TextView) itemView.findViewById(R.id.message);
             this.time = (TextView) itemView.findViewById(R.id.time);
-            this.commentBtn = itemView.findViewById(R.id.commentBtn);
-            this.comment = itemView.findViewById(R.id.comment);
+            this.uploadBtn = itemView.findViewById(R.id.uploadBtn);
             this.recyclerView = itemView.findViewById(R.id.comments);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         }
