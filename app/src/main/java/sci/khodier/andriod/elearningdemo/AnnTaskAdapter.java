@@ -69,7 +69,7 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem = layoutInflater.inflate(R.layout.list_item3, parent, false);
+        View listItem = layoutInflater.inflate(R.layout.list_item5, parent, false);
         getInfo();
         ViewHolder viewHolder = new ViewHolder(listItem);
         return viewHolder;
