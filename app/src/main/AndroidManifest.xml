@@ -22,10 +22,11 @@
         android:roundIcon="@mipmap/icone"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ElearingDemo"
+        android:theme="@style/Theme.Design.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ActiveCourse"
+            android:theme="@style/Theme.ElearingDemo"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

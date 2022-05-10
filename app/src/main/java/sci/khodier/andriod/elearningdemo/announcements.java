@@ -1,14 +1,23 @@
 package sci.khodier.andriod.elearningdemo;
 
 public class announcements {
-    String message, time, courseName, type , id;
+    String message, time, courseName, type, id, degree;
 
     public announcements(String message, String time, String courseName, String type, String id) {
         this.message = message;
         this.time = time;
         this.courseName = courseName;
         this.type = type;
-        this.id=id;
+        this.id = id;
+    }
+
+    public announcements(String message, String time, String courseName, String type, String id, String degree) {
+        this.message = message;
+        this.time = time;
+        this.courseName = courseName;
+        this.type = type;
+        this.id = id;
+        this.degree = degree;
     }
 
     public String getMessage() {
@@ -17,6 +26,14 @@ public class announcements {
 
     public String getId() {
         return id;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
     public void setId(String id) {

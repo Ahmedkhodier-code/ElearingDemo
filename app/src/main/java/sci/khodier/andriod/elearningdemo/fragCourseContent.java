@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.annotations.Nullable;
@@ -54,7 +55,7 @@ import java.util.Objects;
 public class fragCourseContent extends Fragment {
     private static final int RESULT_OK = 1;
     ImageView upload;
-    EditText material_Name;
+    TextInputEditText material_Name;
     Uri imageuri = null;
     ProgressDialog dialog;
     String courseId, materialName;

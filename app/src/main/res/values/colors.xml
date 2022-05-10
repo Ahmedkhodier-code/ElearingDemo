@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color> <!-- #FF4081-->
     <color name="graylight">#D3D3D3</color>
+    <color name="username">#2196F3</color>
 </resources>

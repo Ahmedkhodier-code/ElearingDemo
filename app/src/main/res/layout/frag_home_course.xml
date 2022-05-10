@@ -19,28 +19,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Announcements: " />
-
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ann"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="150dp">
+            android:layout_height="150dp"
+            android:backgroundTint="@color/black"
+            android:hint="Announcements">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/announcements"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Announcements"
+                android:layout_height="match_parent"
                 android:textColor="#706E6E"
                 tools:ignore="InvalidId" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -49,44 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/round3_button"
-            android:text="save" />
+            android:text="save"
+            android:textColor="@color/username"/>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Task: " />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/myTask"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/task"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Task"
-                android:textColor="#706E6E"
-                tools:ignore="InvalidId" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/saveTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/round3_button"
-            android:text="save" />
-
-    </LinearLayout>
-
 
 </LinearLayout>

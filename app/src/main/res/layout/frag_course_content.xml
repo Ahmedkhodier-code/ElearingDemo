@@ -11,25 +11,35 @@
 
         <LinearLayout
             android:id="@+id/upload"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_margin="20dp">
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/nameMaterial"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/outlinedTextField"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
+                android:hint="Enter the name first"
                 android:layout_gravity="center"
-                android:layout_marginRight="20dp"
-                android:hint="Enter the name first  :"
                 android:textSize="20sp"
-                 />
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameMaterial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
                 android:id="@+id/uploadpdf"
                 android:layout_width="40dp"
+                android:layout_gravity="center"
                 android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
                 android:src="@drawable/simple_upload_arrow_button" />
         </LinearLayout>
 

@@ -29,13 +29,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -54,7 +54,7 @@ public class fragAddCourse extends Fragment implements View.OnClickListener {
     CheckBox checkBox;
     Button create;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    EditText courseName , password;
+    TextInputEditText courseName , password;
     boolean flag;
     Boolean checkCourse;
     String sItem , username;
