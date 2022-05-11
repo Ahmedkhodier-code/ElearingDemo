@@ -1,6 +1,7 @@
 package sci.khodier.andriod.elearningdemo;
 
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,6 +79,8 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(context, "THE TYPE OF THIS IS "+ currentAnn.getType(), Toast.LENGTH_SHORT).show();
+            //       if(currentAnn.getType().equals(""))
 
                 //-----------------------------------------------------------
                 //-------------------------------

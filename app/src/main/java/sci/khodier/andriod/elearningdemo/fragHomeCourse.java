@@ -13,12 +13,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,14 +29,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -47,10 +55,16 @@ public class fragHomeCourse extends Fragment {
     Button saveAnn;
     String courseId, nameOfCourse;
     DocumentReference ref;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseMessaging fm = FirebaseMessaging.getInstance();
     final String SENDER_ID = "YOUR_SENDER_ID";
     final int messageId = 0; // Increment for each
+    String role;
+    LinearLayout ll;
+    ArrayList<announcements> myListData = new ArrayList<>();
+    private static final String TAG = "ReadAndWriteSnippets";
 
     fragHomeCourse(String courseId) {
         this.courseId = courseId;
@@ -86,16 +100,92 @@ public class fragHomeCourse extends Fragment {
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 
+    public void getAnn() {
+        myListData = new ArrayList<>();
+        db.collection("announcements").whereEqualTo("courseId", courseId)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        myListData.add(new announcements(document.getString("message"), document.get("date") + "",
+                                document.getString("courseName"), "announcements", document.getId()));
+                        System.out.println("-------------------/////----------------");
+                    }
+                    RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
+                    AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                    Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public String getRole() {
+        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    System.out.println("task isSuccessful ");
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        System.out.println("task isExists ");
+
+                        System.out.println("Document" + doc.getData().toString());
+                        role = ("" + doc.get("role"));
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                } else {
+                    System.out.println("task isn'tSuccessful ");
+                }
+            }
+        });
+        System.out.println("the role is :" + role);
+        return role;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.frag_home_course, container, false);
+        ll = rootView.findViewById(R.id.annCont);
+
+        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        role = ("" + doc.get("role"));
+                        if (role.equals("Student") || role == "Student") {
+                            ll.setVisibility(View.GONE);
+                        }
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
         announcements = rootView.findViewById(R.id.announcements);
         ann = rootView.findViewById(R.id.ann);
         saveAnn = rootView.findViewById(R.id.saveAnn);
         courseName = rootView.findViewById(R.id.courseName);
         loadCourse();
+        getAnn();
+        RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
+        AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
         saveAnn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

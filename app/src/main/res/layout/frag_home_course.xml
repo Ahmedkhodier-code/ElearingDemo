@@ -17,9 +17,10 @@
 
 
     <LinearLayout
+        android:id="@+id/annCont"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -46,7 +47,15 @@
             android:layout_gravity="center"
             android:background="@drawable/round3_button"
             android:text="save"
-            android:textColor="@color/username"/>
+            android:textColor="@color/username" />
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/AnnAndTask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:scrollbars="vertical">
+
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

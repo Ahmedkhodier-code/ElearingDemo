@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,19 +23,27 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class fragCourseAss extends Fragment {
-    String courseId;
+    String courseId, role;
     Button saveTask;
     TextInputLayout myTask;
     TextView addTask, degree, Date;
@@ -42,23 +53,105 @@ public class fragCourseAss extends Fragment {
     final int messageId = 0; // Increment for each
     final Calendar myCalendar = Calendar.getInstance();
     EditText editText;
+    View rootView;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    ArrayList<announcements> myListData = new ArrayList<>();
+    LinearLayout ll;
+    DocumentReference ref;
+
+    private static final String TAG = "ReadAndWriteSnippets";
 
     fragCourseAss(String courseId) {
         this.courseId = courseId;
     }
 
 
+    public void getTasks() {
+        myListData = new ArrayList<>();
+        db.collection("tasks")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        myListData.add(new announcements(document.getString("message"),
+                                document.get("date") + "", document.getString("courseName"), "tasks",
+                                document.getId()));
+                        System.out.println("-------------------/////----------------");
+                    }
+                    RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
+                    AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                    Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public String getRole() {
+        db.collection("users").document(currentUser.getEmail()).
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "currentUser data: " + document.getData());
+                        role = document.getString("role");
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        System.out.println("the role is :" + role);
+        return role;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.frag_course_ass, container, false);
+        rootView = inflater.inflate(R.layout.frag_course_ass, container, false);
+
+        ll = rootView.findViewById(R.id.taskCont);
+        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        role = ("" + doc.get("role"));
+                        if (role.equals("Student")||role=="Student"){
+                            ll.setVisibility(View.GONE);
+                        }
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
         saveTask = rootView.findViewById(R.id.saveTask);
         myTask = rootView.findViewById(R.id.myTask);
         addTask = rootView.findViewById(R.id.task);
         editText = rootView.findViewById(R.id.date);
         degree = rootView.findViewById(R.id.degree);
         Date = rootView.findViewById(R.id.date);
+        getTasks();
+        RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
+        AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {

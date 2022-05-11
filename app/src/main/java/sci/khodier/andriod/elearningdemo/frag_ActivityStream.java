@@ -95,7 +95,7 @@ public class frag_ActivityStream extends Fragment {
         });
     }
 
-    public String getRule() {
+    public String getRole() {
         db.collection("users").document(currentUser.getEmail()).
                 get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -125,7 +125,7 @@ public class frag_ActivityStream extends Fragment {
         ann = rootview.findViewById(R.id.annBtn);
         task = rootview.findViewById(R.id.taskBtn);
         myListData = new ArrayList<>();
-        getRule();
+        getRole();
         ann.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
