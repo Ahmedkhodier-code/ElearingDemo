@@ -44,7 +44,7 @@ public class SplashScrean extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(SplashScrean.this, LoginActivity2.class));
                 finish();
             }
         },1500L); //1.5seconds

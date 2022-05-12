@@ -233,7 +233,6 @@ public class fragCourseAss extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            //     sendNotification("new task added click to see", "new task");
 
                                             Log.d(TAG, "tasks added " + task.getResult());
                                             System.out.println("user added in db announcements collection: " + task.getResult());
