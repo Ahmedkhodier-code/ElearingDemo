@@ -137,7 +137,7 @@ public class fragRegCourse extends Fragment {
                             Map<String, Object> Student = new HashMap<>();
                             Student.put("StudentEmail",currentUser.getEmail());
                             db.collection("courses").document(id).collection("Students").
-                                    document().set(Student)
+                                    document(currentUser.getEmail()).set(Student)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
