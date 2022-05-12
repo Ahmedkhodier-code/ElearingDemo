@@ -25,14 +25,15 @@ public class SplashScrean extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.splashscrean_main);
-        imageView=(ImageView)findViewById(R.id.img1); // Declare an imageView to show the animation.
+        imageView = (ImageView) findViewById(R.id.img1); // Declare an imageView to show the animation.
 
         anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.side_slide); // Create the animation.
-        mAuthListener= new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser()!=null){
-                    Intent intent =new Intent(SplashScrean.this ,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);;
+                if (firebaseAuth.getCurrentUser() != null) {
+                    Intent intent = new Intent(SplashScrean.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    ;
                     startActivity(intent);
 
                 }
@@ -44,10 +45,16 @@ public class SplashScrean extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null) {
+                    mAuth.addAuthStateListener(mAuthListener);
+                }
                 startActivity(new Intent(SplashScrean.this, LoginActivity2.class));
                 finish();
             }
-        },1500L); //1.5seconds
+        }, 1500L); //1.5seconds
+
+
 //        anim.setAnimationListener(new Animation.AnimationListener() {
 //            @Override
 //            public void onAnimationStart(Animation animation) {

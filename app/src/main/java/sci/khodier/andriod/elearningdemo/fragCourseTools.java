@@ -1,5 +1,6 @@
 package sci.khodier.andriod.elearningdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,7 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class fragCourseTools extends Fragment implements View.OnClickListener {
+public class fragCourseTools extends Fragment {
     String courseId;
     Button deleteCourse;
     View rootView;
@@ -43,8 +44,29 @@ public class fragCourseTools extends Fragment implements View.OnClickListener {
         rootView = inflater.inflate(R.layout.frag_course_tools, container, false);
         // Inflate the layout for this fragment
         deleteCourse = rootView.findViewById(R.id.deleteCourse);
+        deleteCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("courses").document(courseId)
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                Intent intent=new Intent(getContext(),MainActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error deleting document", e);
+                            }
+                        });
+            }
+        });
         getStudent();
-        System.out.println("myListData"+myListData.toArray().toString());
+        System.out.println("myListData" + myListData.toArray().toString());
         return rootView;
     }
 
@@ -65,34 +87,11 @@ public class fragCourseTools extends Fragment implements View.OnClickListener {
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     recyclerView.setAdapter(adapter);
-                }
-                else {
+                } else {
                     Log.w(TAG, "Error getting documents.", task.getException());
                     Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == deleteCourse) {
-            if (false) {
-                db.collection("courses").document(courseId)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error deleting document", e);
-                            }
-                        });
-            }
-        }
     }
 }
