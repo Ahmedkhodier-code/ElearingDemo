@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class fragCourseAss extends Fragment {
-    String courseId, role;
+    String courseId, role , nameOfCourse;
     Button saveTask;
     TextInputLayout myTask;
     TextView addTask, degree, Date;
@@ -116,6 +116,25 @@ public class fragCourseAss extends Fragment {
         return role;
     }
 
+    public void loadCourse() {
+        ref = FirebaseFirestore.getInstance().collection("courses").document(courseId);
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        String s = doc.getString("name");
+                        nameOfCourse = s;
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -123,6 +142,7 @@ public class fragCourseAss extends Fragment {
         rootView = inflater.inflate(R.layout.frag_course_ass, container, false);
 
         ll = rootView.findViewById(R.id.taskCont);
+        loadCourse();
         ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -197,6 +217,7 @@ public class fragCourseAss extends Fragment {
                         ann.put("degree", degree.getText().toString());
                         ann.put("coursed", courseId);
                         ann.put("date", currentDateandTime);
+                        ann.put("courseName",     nameOfCourse);
                         // Add a new document with a generated ID
                         db.collection("tasks").document().set(ann)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
