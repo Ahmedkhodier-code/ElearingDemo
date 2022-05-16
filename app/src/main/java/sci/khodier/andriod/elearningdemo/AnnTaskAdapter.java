@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,8 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
     Context context;
     String role = "";
     DocumentReference ref;
+    ViewHolder holder;
+    announcements currentAnn;
     // RecyclerView recyclerView;
 
     public AnnTaskAdapter(ArrayList<announcements> listdata, Context context) {
@@ -72,15 +75,17 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        this.holder=holder;
         final announcements currentAnn = listdata.get(position);
+        this.currentAnn=currentAnn;
         listComment = new ArrayList<>();
         int idx = position;
         holder.cousreName.setText(listdata.get(position).getCourseName());
         holder.message.setText("" + listdata.get(position).getMessage());
         holder.time.setText(listdata.get(position).getTime());
         String annId = listdata.get(position).getId();
-        getComments(holder.recyclerView, annId);
-        if(currentAnn.getType().equals("tasks")||currentAnn.getType()=="tasks"){
+        getComments(holder.recyclerView, annId, currentAnn.getType());
+        if (currentAnn.getType().equals("tasks") || currentAnn.getType() == "tasks") {
 
             ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
             ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -90,9 +95,9 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
                         DocumentSnapshot doc = task.getResult();
                         if (doc.exists()) {
                             role = ("" + doc.get("role"));
-                            if (role.equals("Student")||role=="Student"){
+                            if (role.equals("Student") || role == "Student") {
                                 holder.del.setVisibility(View.GONE);
-                            }else{
+                            } else {
                                 holder.del.setVisibility(View.VISIBLE);
                             }
                         } else {
@@ -104,7 +109,15 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
             holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "THE TYPE OF THIS IS "+ currentAnn.getType(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "THE TYPE OF THIS IS " + currentAnn.getType(), Toast.LENGTH_SHORT).show();
+                    if (currentAnn.getType().equals("tasks") || currentAnn.getType() == "tasks") {
+                        Intent intent = new Intent(context, assActivity.class);
+                        intent.putExtra("courseName",currentAnn.getCourseName());
+                        intent.putExtra("taskId",currentAnn.getId());
+                        intent.putExtra("currentAnn",currentAnn);
+                        intent.putExtra("annId",annId);
+                        context.startActivity(intent);
+                    }
 
                 }
             });
@@ -118,7 +131,7 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                FirebaseFirestore.getInstance().collection("announcements")
+                                FirebaseFirestore.getInstance().collection(currentAnn.getType())
                                         .document(annId).delete().
                                         addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -147,11 +160,12 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
             public void onClick(View v) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
                 String currentDateandTime = sdf.format(new Date());
-                addComment(holder.comment.getText().toString(),annId,currentDateandTime,username);
+                addComment(holder.comment.getText().toString(), annId, currentDateandTime, username, currentAnn.getType());
             }
         });
     }
-    public void addComment(String text, String annId,String time,String userName) {
+
+    public void addComment(String text, String annId, String time, String userName, String type) {
         final String TAG = "DocSnippets";
         // [START add_ada_lovelace]
         // Create a new user with a first and last name
@@ -162,13 +176,15 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
         user.put("commentText", text);
 
         // Add a new document with a generated ID
-        db.collection("announcements").document(annId).collection("comments").document().set(user)
+        db.collection(type).document(annId).collection("comments").document().set(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "comment added " + task.getResult());
                             System.out.println("comment added in db: " + task.getResult());
+                            holder.comment.setText("");
+                            getComments(holder.recyclerView, annId, currentAnn.getType());
                         }
                     }
                 })
@@ -180,9 +196,9 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
                 });
     }
 
-    public void getComments(RecyclerView recyclerView, String id ) {
+    public void getComments(RecyclerView recyclerView, String id, String type) {
         listComment = new ArrayList<comment>();
-        db.collection("announcements").document(id).collection("comments")
+        db.collection(type).document(id).collection("comments")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -239,8 +255,8 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             this.del = itemView.findViewById(R.id.deleteBtn);
-            this.comment=itemView.findViewById(R.id.comment);
-            this.commentBtn=itemView.findViewById(R.id.commentBtn);
+            this.comment = itemView.findViewById(R.id.comment);
+            this.commentBtn = itemView.findViewById(R.id.commentBtn);
             this.cousreName = (TextView) itemView.findViewById(R.id.courseName);
             this.message = (TextView) itemView.findViewById(R.id.message);
             this.time = (TextView) itemView.findViewById(R.id.time);

@@ -215,7 +215,7 @@ public class fragCourseAss extends Fragment {
                         ann.put("message", addTask.getText().toString());
                         ann.put("endDate", Date.getText().toString());
                         ann.put("degree", degree.getText().toString());
-                        ann.put("coursed", courseId);
+                        ann.put("courseId", courseId);
                         ann.put("date", currentDateandTime);
                         ann.put("courseName",     nameOfCourse);
                         // Add a new document with a generated ID
