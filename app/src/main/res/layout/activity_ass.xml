@@ -12,15 +12,27 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
         android:text="ASSIGNMENT INFORMATION"
         android:textSize="18sp" />
+
+    <View
+        android:layout_width="263.7dp"
+        android:layout_height="1dp"
+        android:layout_gravity="left"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="3.3dp"
+        android:layout_marginRight="20dp"
+        android:background="#f2f2f3" />
 
     <TextView
         android:id="@+id/courseName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
         android:text="course name"
         android:textSize="15sp" />
 
@@ -45,22 +57,35 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
         android:text=" ASSIGNMENT SUBMISSION"
         android:textSize="18sp" />
+
+    <View
+        android:layout_width="263.7dp"
+        android:layout_height="1dp"
+        android:layout_gravity="left"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="3.3dp"
+        android:layout_marginRight="20dp"
+        android:background="#f2f2f3" />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center"
         android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
         android:text="Text Submission"
         android:textSize="15sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
 
@@ -93,6 +118,15 @@
 
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/material2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scrollbars="vertical">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,7 +136,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comments"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="160dp"
             android:scrollbars="vertical">
 
         </androidx.recyclerview.widget.RecyclerView>

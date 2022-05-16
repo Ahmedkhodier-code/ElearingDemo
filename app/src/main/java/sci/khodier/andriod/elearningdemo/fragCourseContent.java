@@ -146,6 +146,7 @@ public class fragCourseContent extends Fragment {
 
 
     public void getMaterial() {
+        System.out.println("from content");
         db.collection("courses").document(courseId).collection("material")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -162,7 +163,7 @@ public class fragCourseContent extends Fragment {
                         System.out.println("-----------------------------------");
                     }
                     RecyclerView recyclerView = rootView.findViewById(R.id.material);
-                    materialAdapter adapter = new materialAdapter(myListData, getContext());
+                    materialAdapter adapter = new materialAdapter(myListData, getContext(), "mat");
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     recyclerView.setAdapter(adapter);

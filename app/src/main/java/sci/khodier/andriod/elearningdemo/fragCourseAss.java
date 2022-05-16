@@ -69,7 +69,7 @@ public class fragCourseAss extends Fragment {
 
     public void getTasks() {
         myListData = new ArrayList<>();
-        db.collection("tasks")
+        db.collection("tasks").whereEqualTo("courseId",courseId)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -217,7 +217,7 @@ public class fragCourseAss extends Fragment {
                         ann.put("degree", degree.getText().toString());
                         ann.put("courseId", courseId);
                         ann.put("date", currentDateandTime);
-                        ann.put("courseName",     nameOfCourse);
+                        ann.put("courseName",  nameOfCourse);
                         // Add a new document with a generated ID
                         db.collection("tasks").document().set(ann)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {

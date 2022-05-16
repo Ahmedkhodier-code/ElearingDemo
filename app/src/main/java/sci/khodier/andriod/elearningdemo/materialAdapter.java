@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,12 +27,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -44,14 +40,16 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
     FirebaseUser currentUser = mAuth.getCurrentUser();
     private static final String TAG = "ReadAndWriteSnippets";
     Context context;
+    String place;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     DocumentReference ref;
     String role = "";
 
     // RecyclerView recyclerView;
-    public materialAdapter(ArrayList<material> listdata, Context context) {
+    public materialAdapter(ArrayList<material> listdata, Context context, String place) {
         this.listdata = listdata;
+        this.place = place;
         this.context = context;
     }
 
@@ -92,8 +90,8 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
         String materialName = listdata.get(position).getName();
         String materialId = listdata.get(position).getId();
         String courseId = listdata.get(position).getCourseId();
-        if (getRule().equals("Student")) {
-            holder.del.setVisibility(View.INVISIBLE);
+        if (getRule() == "Student" && place == "mat") {
+            holder.del.setVisibility(View.GONE);
         }
         int idx = position;
         holder.del.setOnClickListener(new View.OnClickListener() {
@@ -105,24 +103,46 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                FirebaseFirestore.getInstance().collection("courses")
-                                        .document(courseId).collection("material").
-                                        document(materialId).delete().
-                                        addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    System.out.println("courseId: " + courseId);
-                                                    System.out.println("materialId: " + materialId);
-                                                    listdata.remove(idx);
-                                                    Toast.makeText(context, "Deleted Successfully",
-                                                            Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(context, "Failed to delete",
-                                                            Toast.LENGTH_SHORT).show();
+                                if (place == "mat") {
+                                    FirebaseFirestore.getInstance().collection("courses")
+                                            .document(courseId).collection("material").
+                                            document(materialId).delete().
+                                            addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        System.out.println("courseId: " + courseId);
+                                                        System.out.println("materialId: " + materialId);
+                                                        listdata.remove(idx);
+                                                        Toast.makeText(context, "Deleted Successfully",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(context, "Failed to delete",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                } else if (place == "ass") {
+                                    FirebaseFirestore.getInstance().collection("tasks")
+                                            .document(courseId).collection("material").
+                                            document(materialId).delete().
+                                            addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        System.out.println("courseId: " + courseId);
+                                                        System.out.println("materialId: " + materialId);
+                                                        listdata.remove(idx);
+                                                        Toast.makeText(context, "Deleted Successfully",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(context, "Failed to delete",
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                }
+
                             }
 
                         })
@@ -162,7 +182,7 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView cousreName , time;
+        public TextView cousreName, time;
         public RelativeLayout relativeLayout;
         public Button del;
 
@@ -170,7 +190,7 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
             super(itemView);
             del = itemView.findViewById(R.id.deleteBtn);
             this.cousreName = (TextView) itemView.findViewById(R.id.name);
-            this.time=itemView.findViewById(R.id.time);
+            this.time = itemView.findViewById(R.id.time);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         }
     }

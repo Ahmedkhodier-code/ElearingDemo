@@ -45,38 +45,49 @@ import java.util.Objects;
 public class assActivity extends AppCompatActivity {
     TextView courseName, points, message;
     TextInputEditText pdfName;
-    ImageView commentBtn, upload;
+    ImageView commentBtn, uploadFile;
     announcements currentAnn;
     EditText comment;
     public RecyclerView recyclerView;
+    public RecyclerView recyclerView2;
     private static final String TAG = "commentRead";
     private ArrayList<comment> listComment;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference ref;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    String annId, username , materialName;
+    String annId, username, materialName;
     TextInputEditText material_Name;
     ProgressDialog dialog;
     Uri imageuri = null;
+    ArrayList<material> myListData = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInfo();
-        getInfo2();
         setContentView(R.layout.activity_ass);
         courseName = findViewById(R.id.courseName);
         comment = findViewById(R.id.comment);
-        upload = findViewById(R.id.uploadpdf);
+        uploadFile = findViewById(R.id.uploadpdf);
         points = findViewById(R.id.point);
         message = findViewById(R.id.message);
         pdfName = findViewById(R.id.pdfName);
         commentBtn = findViewById(R.id.commentBtn);
-        annId = getIntent().getStringExtra("annId");
+        material_Name = findViewById(R.id.pdfName);
+        annId = getIntent().getExtras().getString("annId");
+        System.out.println("annId2: " + annId);
         currentAnn = (announcements) getIntent().getSerializableExtra("currentAnn");
-        courseName.setText(getIntent().getStringExtra("courseName"));
+        String s = getIntent().getExtras().getString("courseName");
+        System.out.println("courseName: " + s);
+        courseName.setText(s);
         message.setText(currentAnn.getMessage());
+        getInfo();
+        getInfo2();
+        recyclerView = findViewById(R.id.comments);
+        recyclerView2 = findViewById(R.id.material2);
+        getMaterial();
+        getComments(recyclerView, annId, currentAnn.getType());
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +97,7 @@ public class assActivity extends AppCompatActivity {
 
             }
         });
-        upload.setOnClickListener(new View.OnClickListener() {
+        uploadFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galleryIntent = new Intent();
@@ -99,7 +110,7 @@ public class assActivity extends AppCompatActivity {
     }
 
     public void getInfo() {
-        ref = FirebaseFirestore.getInstance().collection("tasks").document(Objects.requireNonNull(currentAnn.getId()));
+        ref = FirebaseFirestore.getInstance().collection("tasks").document(annId);
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -153,34 +164,6 @@ public class assActivity extends AppCompatActivity {
         return res;
     }
 
-//    public void getMaterial() {
-//        db.collection("courses").document(courseId).collection("material")
-//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.d(TAG, document.getId() + " => " + document.getData());
-//                        myListData.add(new material(document.getId(),
-//                                Objects.requireNonNull(document.getString("name"))
-//                                , document.getString("extension")
-//                                , document.getString("type")
-//                                , document.getString("courseId"),
-//                                document.getString("time")));
-//                        System.out.println("-----------------------------------");
-//                    }
-//                    RecyclerView recyclerView = rootView.findViewById(R.id.material);
-//                    materialAdapter adapter = new materialAdapter(myListData, getContext());
-//                    recyclerView.setHasFixedSize(true);
-//                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//                    recyclerView.setAdapter(adapter);
-//                } else {
-//                    Log.w(TAG, "Error getting documents.", task.getException());
-//                    Toast.makeText(getContext(), "documents failed.", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -231,7 +214,7 @@ public class assActivity extends AppCompatActivity {
                         material.put("extension", getExt(mimeType));
                         material.put("annId", annId);
                         material.put("time", currentDateandTime);
-                        db.collection("tasks").document(annId).collection("assignments ").
+                        db.collection("tasks").document(annId).collection("material").
                                 document().set(material)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -259,6 +242,7 @@ public class assActivity extends AppCompatActivity {
                         System.out.println("myurl" + myurl);
                         dialog.setProgress(100);
                         Toast.makeText(assActivity.this, "Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                        getMaterial();
                     } else {
                         dialog.dismiss();
                         Toast.makeText(assActivity.this, "UploadedFailed", Toast.LENGTH_SHORT).show();
@@ -266,7 +250,7 @@ public class assActivity extends AppCompatActivity {
                 }
             });
         }
-
+        pdfName.setText("");
     }
 
     public void addComment(String text, String annId, String time, String userName, String type) {
@@ -301,6 +285,7 @@ public class assActivity extends AppCompatActivity {
     }
 
     public void getComments(RecyclerView recyclerView, String id, String type) {
+        System.out.println("get comment from assActivity");
         listComment = new ArrayList<comment>();
         db.collection(type).document(id).collection("comments")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -318,12 +303,49 @@ public class assActivity extends AppCompatActivity {
                     recyclerView.setLayoutManager(new LinearLayoutManager(assActivity.this));
                     recyclerView.setAdapter(adapter);
                     listComment = new ArrayList<comment>();
-
                 } else {
                     Log.w(TAG, "Error getting documents.", task.getException());
                     Toast.makeText(assActivity.this, "Student failed.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    public void getMaterial() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        System.out.println("from content");
+        db.collection("tasks").document(annId).collection("material")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        myListData.add(new material(document.getId(),
+                                Objects.requireNonNull(document.getString("name"))
+                                , document.getString("extension")
+                                , document.getString("type")
+                                , document.getString("annId"),
+                                document.getString("time")));
+                        System.out.println("-----------------------------------");
+                    }
+                    RecyclerView recyclerView = findViewById(R.id.material2);
+                    materialAdapter adapter = new materialAdapter(myListData, assActivity.this,"ass");
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(assActivity.this));
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                    Toast.makeText(assActivity.this, "documents failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
