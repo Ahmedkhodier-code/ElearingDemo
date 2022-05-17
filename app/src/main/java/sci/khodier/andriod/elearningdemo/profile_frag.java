@@ -36,7 +36,7 @@ public class profile_frag extends Fragment implements View.OnClickListener {
     FirebaseUser currentUser;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference ref;
-    ImageView profilepic;
+    ImageView profilePic;
     TextView college, uni, level, username, phone, gender, Email , courseCount , role;
     Button signOut;
     Bitmap bitmap = null;
@@ -54,7 +54,7 @@ public class profile_frag extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.frag_profile, container, false);
         TransitionInflater inflater0 = TransitionInflater.from(requireContext());
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
-        profilepic = rootView.findViewById(R.id.profileImg);
+        profilePic = rootView.findViewById(R.id.profileImg);
         college = rootView.findViewById(R.id.collegeName);
         courseCount=rootView.findViewById(R.id.course_number);
         uni = rootView.findViewById(R.id.uniName);
@@ -82,7 +82,7 @@ public class profile_frag extends Fragment implements View.OnClickListener {
                         Email.setText("" + currentUser.getEmail());
                         courseCount.setText(""+ doc.get("courses"));
                         role.setText(""+doc.get("role"));
-                        LoadImage loadImage = new LoadImage(profilepic);
+                        LoadImage loadImage = new LoadImage(profilePic);
                         if (doc.get("profImage") + "" != "") {
                             loadImage.execute(doc.get("profImage") + "");
                         }

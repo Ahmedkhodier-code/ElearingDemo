@@ -1,75 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    tools:context=".fragLogin"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/round3_button"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@drawable/round3_button"
+    tools:context=".fragLogin">
 
     <LinearLayout
         android:id="@+id/loginframe"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_gravity="left"
-        android:paddingTop="125dp"
         android:layout_marginLeft="36dp"
         android:layout_marginBottom="90dp"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="125dp">
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="left"
             android:gravity="left"
             android:text="LOGIN"
-            android:layout_gravity="left"
             android:textColor="#fefefe"
             android:textSize="35sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:layout_gravity="left"
             android:layout_marginTop="52.7dp"
-            android:textColor="#fefefe"
             android:text="Email"
-            />
+            android:textColor="#fefefe"
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:inputType="textEmailAddress"
-            android:textCursorDrawable="@drawable/white_cursor_color"
             android:layout_gravity="left"
-            android:maxLines="1"
             android:layout_marginTop="18dp"
             android:background="@android:color/transparent"
-            />
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textCursorDrawable="@drawable/white_cursor_color"
+            android:textSize="15sp" />
 
         <View
             android:layout_width="263.7dp"
             android:layout_height="1dp"
             android:layout_gravity="left"
             android:layout_marginTop="6.3dp"
-            android:background="#f2f2f3"/>
+            android:background="#f2f2f3" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="#fefefe"
             android:layout_gravity="left"
             android:layout_marginTop="37.3dp"
             android:text="Password"
-            />
+            android:textColor="#fefefe"
+            android:textSize="20sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,8 +73,7 @@
             android:layout_marginTop="18dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/etPasswordLayout"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
@@ -86,11 +81,12 @@
 
                 <android.widget.EditText
                     android:id="@+id/Password"
-                    android:background="@android:color/transparent"                            android:layout_width="match_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:background="@android:color/transparent"
+                    android:inputType="textPassword"
                     android:textColor="#FFFFFF"
-                    android:inputType="textPassword"/>
+                    android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
@@ -100,29 +96,30 @@
             android:layout_height="1dp"
             android:layout_gravity="left"
             android:layout_marginTop="6.3dp"
-            android:background="#f2f2f3"/>
+            android:background="#f2f2f3" />
 
         <TextView
+            android:id="@+id/forget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12.3sp"
-            android:textColor="#f2f2f3"
             android:layout_gravity="right"
             android:layout_marginTop="17.3dp"
-            android:text="Forgot Password?"
             android:clickable="true"
-            android:id="@+id/forget"
-            />
+            android:text="Forgot Password?"
+            android:textColor="#f2f2f3"
+            android:textSize="12.3sp" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp">
+
             <TextView
                 android:id="@+id/textView0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#fefefe"
                 android:text="Need an account?"
+                android:textColor="#fefefe"
                 android:textSize="13dp" />
 
 
@@ -167,4 +164,4 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-</FrameLayout >
+</FrameLayout>

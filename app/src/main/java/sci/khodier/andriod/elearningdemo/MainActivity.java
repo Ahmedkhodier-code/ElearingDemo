@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     FirebaseUser currentUser = mAuth.getCurrentUser();
     fragCourse Courses = new fragCourse(this, currentUser);
     profile_frag profile = new profile_frag(this, currentUser);
+    message_frag message = new message_frag(this, currentUser);
+
     fragSettings settings = new fragSettings();
     frag_ActivityStream activity = new frag_ActivityStream(this, currentUser);
     private static final String TAG = "PushNotification";
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Toast.makeText(this, "you clicked on home", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.message:
+                getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment, message).commit();
                 Toast.makeText(this, "you clicked on messages", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.activity:

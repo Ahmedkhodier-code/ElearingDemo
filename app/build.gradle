@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+
 }
 
 android {
@@ -28,6 +30,11 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
     }
 }
 
@@ -64,5 +71,39 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.github.arturogutierrez:badges:1.0.5@aar'
+    implementation "com.google.android.material:material"
+    implementation "androidx.appcompat:appcompat"
+    implementation "androidx.legacy:legacy-support-v4"
+    implementation "androidx.media:media"
+
+    // Image
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    // CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Google
+    implementation "com.google.android.gms:play-services-auth:"
+
+    // Firebase
+    implementation platform("com.google.firebase:firebase-bom")
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-auth'
+
+    // FirebaseUI Database
+    implementation 'com.firebaseui:firebase-ui-database:8.0.1'
+
+    // FirebaseUI Storage
+    implementation 'com.firebaseui:firebase-ui-storage:8.0.1'
+
+    // Testing dependencies
+    testImplementation "junit:junit"
+    androidTestImplementation "junit:junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core"
+    androidTestImplementation "androidx.test:runner"
+    androidTestImplementation "androidx.test:rules"
+    androidTestImplementation "androidx.annotation:annotation"
 
 }

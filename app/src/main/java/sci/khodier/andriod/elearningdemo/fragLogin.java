@@ -1,5 +1,4 @@
 package sci.khodier.andriod.elearningdemo;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,12 +19,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import sci.khodier.andriod.elearningdemo.databinding.FragSignupBinding;
 
 public class fragLogin extends Fragment implements View.OnClickListener {
     Button loginFrame;
@@ -35,15 +38,17 @@ public class fragLogin extends Fragment implements View.OnClickListener {
     EditText  Email  ,password;
     TextInputLayout pass;
     String Email0,password0;
+
+    private static final String TAG = "SignInActivity";
 //-------------------
 
     private FirebaseAuth mAuth;
-    private static final String TAG = "EmailPassword";
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     public fragLogin(Context context) {
         this.context=context;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class fragLogin extends Fragment implements View.OnClickListener {
         mAuth = FirebaseAuth.getInstance();
         // initialising all views through id defined above
         progressbar = rootView.findViewById(R.id.progressbar);
+
 
         //----------------
 
