@@ -109,8 +109,12 @@ public class fragHomeCourse extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
-                        myListData.add(new announcements(document.getString("message"), document.get("date") + "",
-                                document.getString("courseName"), "announcements", document.getId()));
+                        myListData.add(new announcements(document.getString("message"),
+                                                        document.get("date") + "",
+                                                        document.getString("courseName"),
+                                                        "announcements",
+                                                        document.getId(),
+                                                        document.get("courseId")+""));
                         System.out.println("-------------------/////----------------");
                     }
                     RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);

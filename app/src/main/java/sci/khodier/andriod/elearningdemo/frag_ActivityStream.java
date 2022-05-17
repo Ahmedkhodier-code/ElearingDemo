@@ -52,7 +52,8 @@ public class frag_ActivityStream extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         myListData.add(new announcements(document.getString("message"), document.get("date") + "",
-                                document.getString("courseName"), "announcements", document.getId()));
+                                document.getString("courseName"), "announcements",
+                                document.getId() ,""+ document.get("courseId")));
                         System.out.println("-------------------/////----------------");
                     }
                     RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
@@ -79,7 +80,7 @@ public class frag_ActivityStream extends Fragment {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         myListData.add(new announcements(document.getString("message"),
                                 document.get("date") + "", document.getString("courseName"), "tasks",
-                                document.getId()));
+                                document.getId(), ""+document.get("courseId")));
                         System.out.println("-------------------/////----------------");
                     }
                     RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);

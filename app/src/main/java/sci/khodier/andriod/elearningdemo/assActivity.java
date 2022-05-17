@@ -233,6 +233,26 @@ public class assActivity extends AppCompatActivity {
                                         System.out.println("--------------------------------");
                                     }
                                 });
+                        db.collection("courses").document(currentAnn.getCourseId()).
+                                collection("tasks").document(annId).collection("material").
+                                document().set(material)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "assignments added " + task.getResult());
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error adding document", e);
+                                        System.out.println("--------------------------------");
+                                        System.out.println("Course doesn't added " + e.toString());
+                                        System.out.println("--------------------------------");
+                                    }
+                                });
                         // After uploading is done it progress
                         // dialog box will be dismissed
                         dialog.dismiss();

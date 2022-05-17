@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class fragCourseAss extends Fragment {
-    String courseId, role , nameOfCourse;
+    String courseId, role, nameOfCourse;
     Button saveTask;
     TextInputLayout myTask;
     TextView addTask, degree, Date;
@@ -69,7 +69,7 @@ public class fragCourseAss extends Fragment {
 
     public void getTasks() {
         myListData = new ArrayList<>();
-        db.collection("tasks").whereEqualTo("courseId",courseId)
+        db.collection("tasks").whereEqualTo("courseId", courseId)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -78,7 +78,7 @@ public class fragCourseAss extends Fragment {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         myListData.add(new announcements(document.getString("message"),
                                 document.get("date") + "", document.getString("courseName"), "tasks",
-                                document.getId()));
+                                document.getId(), document.get("courseId")+"", document.get("degree")+""));
                         System.out.println("-------------------/////----------------");
                     }
                     RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
@@ -151,7 +151,7 @@ public class fragCourseAss extends Fragment {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         role = ("" + doc.get("role"));
-                        if (role.equals("Student")||role=="Student"){
+                        if (role.equals("Student") || role == "Student") {
                             ll.setVisibility(View.GONE);
                         }
                     } else {
@@ -217,7 +217,7 @@ public class fragCourseAss extends Fragment {
                         ann.put("degree", degree.getText().toString());
                         ann.put("courseId", courseId);
                         ann.put("date", currentDateandTime);
-                        ann.put("courseName",  nameOfCourse);
+                        ann.put("courseName", nameOfCourse);
                         // Add a new document with a generated ID
                         db.collection("tasks").document().set(ann)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {

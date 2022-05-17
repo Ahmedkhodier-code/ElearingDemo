@@ -116,6 +116,8 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
                         intent.putExtra("taskId",currentAnn.getId());
                         intent.putExtra("currentAnn",currentAnn);
                         intent.putExtra("annId",annId);
+                        intent.putExtra("courseId",currentAnn.getCourseId());
+
                         context.startActivity(intent);
                     }
 

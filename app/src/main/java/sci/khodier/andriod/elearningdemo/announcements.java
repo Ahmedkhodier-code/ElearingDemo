@@ -3,17 +3,26 @@ package sci.khodier.andriod.elearningdemo;
 import java.io.Serializable;
 
 public class announcements implements Serializable {
-    String message, time, courseName, type, id, degree;
+    String message, time, courseName, type, id, degree , courseId;
 
-    public announcements(String message, String time, String courseName, String type, String id) {
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+
+    public announcements(String message, String time, String courseName, String type, String id , String courseId) {
         this.message = message;
         this.time = time;
         this.courseName = courseName;
         this.type = type;
         this.id = id;
+        this.courseId=courseId;
     }
 
-    public announcements(String message, String time, String courseName, String type, String id, String degree) {
+    public announcements(String message, String time, String courseName, String type, String id, String degree,  String courseId) {
         this.message = message;
         this.time = time;
         this.courseName = courseName;
