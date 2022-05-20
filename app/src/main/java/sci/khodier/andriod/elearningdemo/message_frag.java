@@ -56,11 +56,11 @@ public class message_frag extends Fragment {
     String userName = "", profileImg = null;
     DocumentReference ref;
     private static final String TAG = "MainActivity";
+    String courseId="";
     public static final String MESSAGES_CHILD = "messages";
     public static final String ANONYMOUS = "anonymous";
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
     private static final int REQUEST_IMAGE = 2;
-    private GoogleSignInClient mSignInClient;
     Button sendButton;
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
@@ -83,11 +83,6 @@ public class message_frag extends Fragment {
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         sendButton = rootView.findViewById(R.id.sendButton);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mSignInClient = GoogleSignIn.getClient(context, gso);
         addMessageImageView = rootView.findViewById(R.id.addMessageImageView);
         ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -105,11 +100,10 @@ public class message_frag extends Fragment {
                 }
             }
         });
-        System.out.println("username " + userName);
         // Initialize Realtime Database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         // Get the reference to the "messages" child node to be observed for changes
-        DatabaseReference messagesRef = mFirebaseDatabase.getReference().child(MESSAGES_CHILD);
+        DatabaseReference messagesRef = mFirebaseDatabase.getReference().child(MESSAGES_CHILD).child(courseId);
 
         // Configure the options required for FirebaseRecyclerAdapter with the above Query reference
         FirebaseRecyclerOptions<FriendlyMessage> options = new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
@@ -172,7 +166,7 @@ public class message_frag extends Fragment {
                 );
 
                 // Create a child reference and set the user's message at that location
-                mFirebaseDatabase.getReference().child(MESSAGES_CHILD)
+                mFirebaseDatabase.getReference().child(MESSAGES_CHILD).child(courseId)
                         .push().setValue(friendlyMessage);
                 // Clear the input message field for the next message
                 messageEditText.setText("");

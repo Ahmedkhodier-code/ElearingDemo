@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     frag_ActivityStream activity = new frag_ActivityStream(this, currentUser);
     private static final String TAG = "PushNotification";
     private static final String CHANNEL_ID = "101";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         return false;
     }
+
     private void getToken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
@@ -78,14 +80,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 //If task is failed then
                 if (!task.isSuccessful()) {
                     Log.d(TAG, "onComplete: Failed to get the Token");
+                } else {
+                    //Token
+                    String token = task.getResult();
+                    Log.d(TAG, "onComplete: " + token);
                 }
-
-                //Token
-                String token = task.getResult();
-                Log.d(TAG, "onComplete: " + token);
             }
         });
     }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "firebaseNotifChannel";
