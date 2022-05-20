@@ -61,7 +61,7 @@ public class assActivity extends AppCompatActivity {
     ProgressDialog dialog;
     Uri imageuri = null;
     ArrayList<material> myListData = new ArrayList<>();
-
+    String role="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,21 @@ public class assActivity extends AppCompatActivity {
         pdfName = findViewById(R.id.pdfName);
         commentBtn = findViewById(R.id.commentBtn);
         material_Name = findViewById(R.id.pdfName);
+        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        role = doc.get("role") + "";
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
+        System.out.println("the role is :" + role);
         annId = getIntent().getExtras().getString("annId");
         System.out.println("annId2: " + annId);
         currentAnn = (announcements) getIntent().getSerializableExtra("currentAnn");
@@ -350,7 +365,7 @@ public class assActivity extends AppCompatActivity {
                         System.out.println("-----------------------------------");
                     }
                     RecyclerView recyclerView = findViewById(R.id.material2);
-                    materialAdapter adapter = new materialAdapter(myListData, assActivity.this,"ass");
+                    materialAdapter adapter = new materialAdapter(myListData, assActivity.this,"ass", role);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(assActivity.this));
                     recyclerView.setAdapter(adapter);

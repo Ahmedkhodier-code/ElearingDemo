@@ -74,7 +74,14 @@ public class fragCourseContent extends Fragment {
         this.courseId = courseId;
     }
 
-    public String getRule() {
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.frag_course_content, container, false);
+        material_Name=rootView.findViewById(R.id.nameMaterial);
+        // Inflate the layout for this fragment
+        loadCourse();
+        upload = rootView.findViewById(R.id.uploadpdf);
         db.collection("users").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -83,6 +90,11 @@ public class fragCourseContent extends Fragment {
                     if (document.exists()) {
                         Log.d(TAG, "currentUser data: " + document.getData());
                         role = document.getString("role");
+                        System.out.println("the role1 is :" + role);
+                        if (role == "Student"|| role.equals("Student")) {
+                            rootView.findViewById(R.id.upload).setVisibility(View.GONE);
+                        }
+
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -92,21 +104,10 @@ public class fragCourseContent extends Fragment {
             }
         });
 
-        System.out.println("the role is :" + role);
-        return role;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.frag_course_content, container, false);
-        material_Name=rootView.findViewById(R.id.nameMaterial);
-        // Inflate the layout for this fragment
-        loadCourse();
-        upload = rootView.findViewById(R.id.uploadpdf);
-        if (getRule() == "Student") {
-            rootView.findViewById(R.id.upload).setVisibility(View.INVISIBLE);
+        if (role == "Student"|| role.equals("Student")) {
+            rootView.findViewById(R.id.upload).setVisibility(View.GONE);
         }
-        getMaterial();
+        getMaterial(role);
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +146,7 @@ public class fragCourseContent extends Fragment {
     }
 
 
-    public void getMaterial() {
+    public void getMaterial(String role) {
         System.out.println("from content");
         db.collection("courses").document(courseId).collection("material")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -163,7 +164,9 @@ public class fragCourseContent extends Fragment {
                         System.out.println("-----------------------------------");
                     }
                     RecyclerView recyclerView = rootView.findViewById(R.id.material);
-                    materialAdapter adapter = new materialAdapter(myListData, getContext(), "mat");
+                    System.out.println("the role3 is :" + role);
+
+                    materialAdapter adapter = new materialAdapter(myListData, getContext(), "mat" , role);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     recyclerView.setAdapter(adapter);
@@ -254,7 +257,7 @@ public class fragCourseContent extends Fragment {
                         System.out.println("myurl" + myurl);
                         dialog.setProgress(100);
                         Toast.makeText(getContext(), "Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                        getMaterial();
+                        getMaterial(role);
                     } else {
                         dialog.dismiss();
                         Toast.makeText(getContext(), "UploadedFailed", Toast.LENGTH_SHORT).show();

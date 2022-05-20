@@ -47,30 +47,13 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
     String role = "";
 
     // RecyclerView recyclerView;
-    public materialAdapter(ArrayList<material> listdata, Context context, String place) {
+    public materialAdapter(ArrayList<material> listdata, Context context, String place ,String role ) {
         this.listdata = listdata;
         this.place = place;
         this.context = context;
+        this.role=role;
     }
 
-    public String getRule() {
-        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
-        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    if (doc.exists()) {
-                        role = doc.get("role") + "";
-                    } else {
-                        Log.d("Document", "No data");
-                    }
-                }
-            }
-        });
-        System.out.println("the role is :" + role);
-        return role;
-    }
 
 
     @Override
@@ -90,7 +73,8 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
         String materialName = listdata.get(position).getName();
         String materialId = listdata.get(position).getId();
         String courseId = listdata.get(position).getCourseId();
-        if (getRule() == "Student" && place == "mat") {
+
+        if (role == "Student" && place == "mat") {
             holder.del.setVisibility(View.GONE);
         }
         int idx = position;
