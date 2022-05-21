@@ -24,6 +24,9 @@
         android:theme="@style/Theme.Design.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".chatActivity"
+            android:exported="false" />
+        <activity
             android:name=".assActivity"
             android:exported="false" />
         <activity

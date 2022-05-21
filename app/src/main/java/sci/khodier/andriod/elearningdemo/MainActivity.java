@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     FirebaseUser currentUser = mAuth.getCurrentUser();
     fragCourse Courses = new fragCourse(this, currentUser);
     profile_frag profile = new profile_frag(this, currentUser);
-    message_frag message = new message_frag(this, currentUser);
+    fragMessage message = new fragMessage(this, currentUser);
 
     fragSettings settings = new fragSettings();
     frag_ActivityStream activity = new frag_ActivityStream(this, currentUser);

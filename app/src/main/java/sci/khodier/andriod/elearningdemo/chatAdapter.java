@@ -1,11 +1,8 @@
 package sci.khodier.andriod.elearningdemo;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +25,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -70,6 +65,12 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.ViewHolder> {
         return role;
     }
 
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fm =   ((AppCompatActivity)context).getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = Objects.requireNonNull(fm).beginTransaction();
+        //fragmentTransaction.replace(R.id.chatFrag, fragment);
+        fragmentTransaction.commit(); // save the changes
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,10 +87,15 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.ViewHolder> {
         holder.cousreName.setText(listdata.get(position).getCorseName());
         String courseId = listdata.get(position).getCourseId();
         int idx = position;
+
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                message_frag message = new message_frag(context, currentUser ,courseId);
+                Intent intent = new Intent (context ,chatActivity.class);
+                intent.putExtra("courseId",courseId);
+                context.startActivity(intent);
+//                loadFragment(message);
             }
         });
     }
@@ -107,9 +113,10 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            del = itemView.findViewById(R.id.deleteBtn);
+            itemView.findViewById(R.id.deleteBtn).setVisibility(View.GONE);
             this.cousreName = (TextView) itemView.findViewById(R.id.name);
-            this.time = itemView.findViewById(R.id.time);
+            itemView.findViewById(R.id.time).setVisibility(View.GONE);
+            itemView.findViewById(R.id.creator).setVisibility(View.GONE);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         }
     }

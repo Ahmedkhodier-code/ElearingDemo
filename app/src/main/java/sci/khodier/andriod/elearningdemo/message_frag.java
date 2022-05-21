@@ -67,9 +67,10 @@ public class message_frag extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     EditText messageEditText;
 
-    public message_frag(Context context, FirebaseUser currentUser) {
+    public message_frag(Context context, FirebaseUser currentUser , String courseId) {
         this.context = context;
         this.currentUser = currentUser;
+        this.courseId=courseId;
     }
 
     @Override
