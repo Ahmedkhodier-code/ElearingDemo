@@ -160,9 +160,16 @@ public class AnnTaskAdapter extends RecyclerView.Adapter<AnnTaskAdapter.ViewHold
         holder.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(holder.comment.getText().toString().isEmpty()||holder.comment.getText().toString().equals(null)||
+                        holder.comment.getText().toString().equals("")){
+                    Toast.makeText(context, "please Enter comment first", Toast.LENGTH_SHORT).show();
+
+                }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
                 String currentDateandTime = sdf.format(new Date());
                 addComment(holder.comment.getText().toString(), annId, currentDateandTime, username, currentAnn.getType());
+                holder.comment.setText("");
+                getComments(holder.recyclerView, annId, currentAnn.getType());
             }
         });
     }
