@@ -160,7 +160,7 @@ public class fragCourseContent extends Fragment {
                                 , document.getString("extension")
                                 , document.getString("type")
                                 , document.getString("courseId"),
-                                document.getString("time")));
+                                document.getString("time"),document.getString("username"),document.getString("id")));
                         System.out.println("-----------------------------------");
                     }
                     RecyclerView recyclerView = rootView.findViewById(R.id.material);

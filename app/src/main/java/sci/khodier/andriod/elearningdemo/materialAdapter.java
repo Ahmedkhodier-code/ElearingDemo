@@ -45,15 +45,15 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     DocumentReference ref;
     String role = "";
+    String uploader;
 
     // RecyclerView recyclerView;
-    public materialAdapter(ArrayList<material> listdata, Context context, String place ,String role ) {
+    public materialAdapter(ArrayList<material> listdata, Context context, String place, String role) {
         this.listdata = listdata;
         this.place = place;
         this.context = context;
-        this.role=role;
+        this.role = role;
     }
-
 
 
     @Override
@@ -71,10 +71,12 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
         holder.cousreName.setText(listdata.get(position).getName());
         holder.time.setText(listdata.get(position).getTime());
         String materialName = listdata.get(position).getName();
+        String matId = listdata.get(position).getMaterialId();
+        holder.creator.setText(listdata.get(position).getUsername());
         String materialId = listdata.get(position).getId();
         String courseId = listdata.get(position).getCourseId();
 
-        if (role == "Student" && place == "mat") {
+        if (role == "Student" || role.equals("Student")) {
             holder.del.setVisibility(View.GONE);
         }
         int idx = position;
@@ -138,7 +140,8 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                storageRef.child(materialName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                System.out.println("matId"+matId);
+                storageRef.child(matId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
@@ -153,6 +156,7 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Handle any errors
+                        System.out.println(exception.toString());
                     }
                 });
             }
@@ -166,13 +170,14 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView cousreName, time;
+        public TextView cousreName, time , creator;
         public RelativeLayout relativeLayout;
         public Button del;
 
         public ViewHolder(View itemView) {
             super(itemView);
             del = itemView.findViewById(R.id.deleteBtn);
+            this.creator=(TextView)itemView.findViewById(R.id.creator);
             this.cousreName = (TextView) itemView.findViewById(R.id.name);
             this.time = itemView.findViewById(R.id.time);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);

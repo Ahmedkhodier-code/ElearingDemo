@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -230,7 +231,7 @@ public class fragCourseAss extends Fragment {
                                             Date.setText("");
                                             degree.setText("");
                                             Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
-
+                                            getTasks();
                                             fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
                                                     .setMessageId(Integer.toString(messageId))
                                                     .addData("my_message", addTask.getText().toString())
@@ -274,7 +275,19 @@ public class fragCourseAss extends Fragment {
 
             }
         });
-
+        // Declaring a layout (changes are to be made to this)
+        // Declaring a textview (which is inside the layout)
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.refreshLayout);
+        // Refresh  the layout
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getTasks();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
         return rootView;
     }
 
