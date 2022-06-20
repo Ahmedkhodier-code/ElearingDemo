@@ -77,7 +77,9 @@ public class materialAdapter extends RecyclerView.Adapter<materialAdapter.ViewHo
         String courseId = listdata.get(position).getCourseId();
 
         if (role == "Student" || role.equals("Student")) {
-            holder.del.setVisibility(View.GONE);
+            if(place.equals("mat")){
+                holder.del.setVisibility(View.GONE);
+            }
         }
         int idx = position;
         holder.del.setOnClickListener(new View.OnClickListener() {
