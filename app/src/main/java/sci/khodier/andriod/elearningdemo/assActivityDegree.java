@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 
 public class assActivityDegree extends AppCompatActivity {
     String courseId;
-    View rootView;
-    String role;
     String annId;
     announcements currentAnn;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -37,15 +36,12 @@ public class assActivityDegree extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ass_degree);
         annId = getIntent().getExtras().getString("annId");
-        courseId =getIntent().getExtras().getString("courseId");
+        courseId = getIntent().getExtras().getString("courseId");
         System.out.println("annId2: " + annId);
         currentAnn = (announcements) getIntent().getSerializableExtra("currentAnn");
         String s = getIntent().getExtras().getString("courseName");
-        System.out.println("sscourseId"+courseId);
-        System.out.println("sscurrentAnn"+currentAnn.getCourseId());
-        if(!courseId.equals("")||courseId!="" ||courseId!=null){
+        System.out.println("sscourseId" + courseId);
         getStudent();
-        }
     }
 
     public void getStudent() {
@@ -56,11 +52,25 @@ public class assActivityDegree extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                myListData.add(new student(document.getString("name"),
-                                        document.getString("StudentEmail")));
+                                db.collection("tasks").document(annId).
+                                        collection("degree").document(document.getString("StudentEmail")).
+                                        get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                                    myListData.add(new student(document.getString("name"),
+                                                            document.getString("StudentEmail"), task.getResult().getString("degree")));
+                                                } else {
+                                                    Log.w(TAG, "Error getting documents.", task.getException());
+                                                    myListData.add(new student(document.getString("name"),
+                                                            document.getString("StudentEmail")));
+                                                }
+                                            }
+                                        });
                             }
-                            RecyclerView recyclerView = rootView.findViewById(R.id.studentsdegree);
-                            studentAdapterGrades adapter = new studentAdapterGrades(myListData, assActivityDegree.this);
+                            RecyclerView recyclerView = findViewById(R.id.studentsdegree);
+                            studentAdapterGrades adapter = new studentAdapterGrades(myListData, assActivityDegree.this, annId);
                             recyclerView.setHasFixedSize(true);
                             recyclerView.setLayoutManager(new LinearLayoutManager(assActivityDegree.this));
                             recyclerView.setAdapter(adapter);

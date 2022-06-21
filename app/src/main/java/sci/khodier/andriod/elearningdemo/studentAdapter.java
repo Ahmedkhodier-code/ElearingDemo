@@ -54,9 +54,8 @@ public class studentAdapter extends RecyclerView.Adapter<studentAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final student currentCourse = listdata.get(position);
-        holder.imageView.setVisibility(View.GONE
+        holder.imageView.setVisibility(View.GONE);
 
-        );
         holder.Name.setText(listdata.get(position).getName());
         String name=listdata.get(position).getName();
         holder.Email.setText(listdata.get(position).getEmail());

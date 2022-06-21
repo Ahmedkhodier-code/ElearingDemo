@@ -38,16 +38,18 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class AnnTaskAdapterDegree extends RecyclerView.Adapter<AnnTaskAdapter.ViewHolder> {
+public class AnnTaskAdapterDegree extends RecyclerView.Adapter<AnnTaskAdapterDegree.ViewHolder> {
     private ArrayList<announcements> listdata;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     String username = "";
     private static final String TAG = "commentRead";
     Context context;
     String role = "";
     DocumentReference ref;
-    AnnTaskAdapter.ViewHolder holder;
+    AnnTaskAdapterDegree.ViewHolder holder;
+    announcements currentAnn;
     // RecyclerView recyclerView;
 
     public AnnTaskAdapterDegree(ArrayList<announcements> listdata, Context context) {
@@ -55,21 +57,22 @@ public class AnnTaskAdapterDegree extends RecyclerView.Adapter<AnnTaskAdapter.Vi
         this.context = context;
     }
 
+
     @Override
-    public AnnTaskAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AnnTaskAdapterDegree.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.list_item3_1, parent, false);
         getInfo();
-        AnnTaskAdapter.ViewHolder viewHolder = new AnnTaskAdapter.ViewHolder(listItem);
+        AnnTaskAdapterDegree.ViewHolder viewHolder = new AnnTaskAdapterDegree.ViewHolder(listItem);
         return viewHolder;
     }
 
+
     @Override
-    public void onBindViewHolder(AnnTaskAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(AnnTaskAdapterDegree.ViewHolder holder, int position) {
         this.holder = holder;
         final announcements currentAnn = listdata.get(position);
-        System.out.println("sscourseId"+listdata.get(position).getCourseId());
-        System.out.println("sscurrentAnn"+listdata.get(position).getId());
+        this.currentAnn = currentAnn;
         int idx = position;
         holder.cousreName.setText(listdata.get(position).getCourseName());
         holder.message.setText("" + listdata.get(position).getMessage());
@@ -86,6 +89,7 @@ public class AnnTaskAdapterDegree extends RecyclerView.Adapter<AnnTaskAdapter.Vi
                         if (doc.exists()) {
                             role = ("" + doc.get("role"));
                             if (role.equals("Student") || role == "Student") {
+                                System.out.println("Student");
                             } else {
                             }
                         } else {
@@ -104,9 +108,12 @@ public class AnnTaskAdapterDegree extends RecyclerView.Adapter<AnnTaskAdapter.Vi
                         intent.putExtra("taskId", currentAnn.getId());
                         intent.putExtra("currentAnn", currentAnn);
                         intent.putExtra("annId", annId);
+                        System.out.println("courseId00"+currentAnn.getCourseId());
                         intent.putExtra("courseId", currentAnn.getCourseId());
+
                         context.startActivity(intent);
                     }
+
                 }
             });
         }

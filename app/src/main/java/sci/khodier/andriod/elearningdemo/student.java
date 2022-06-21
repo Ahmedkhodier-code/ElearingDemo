@@ -1,17 +1,21 @@
 package sci.khodier.andriod.elearningdemo;
 
 public class student {
-    String name, email, degree;
+    String name, email, degree = "NA";
 
     public student(String name, String email) {
         this.name = name;
         this.email = email;
+
     }
 
     public student(String name, String email, String degree) {
         this.name = name;
         this.email = email;
         this.degree = degree;
+//        if (degree.equals("") || degree != null || degree != "" || !degree.isEmpty()) {
+//
+//        }
     }
 
     public String getName() {

@@ -225,6 +225,7 @@ public class fragCourseAss extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+
                                             Log.d(TAG, "tasks added " + task.getResult());
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                             addTask.setText("");

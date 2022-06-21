@@ -88,7 +88,7 @@ public class fragCourseGrades extends Fragment {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 myListData.add(new announcements(document.getString("message"),
                                         document.get("date") + "", document.getString("courseName"), "tasks",
-                                        document.getId(), document.get("courseId")+"", document.get("degree")+""));
+                                        document.getId(),document.get("degree")+"", document.get("courseId")+"" ));
                                 System.out.println("-------------------/////----------------");
                             }
                             RecyclerView recyclerView = rootView.findViewById(R.id.students);
