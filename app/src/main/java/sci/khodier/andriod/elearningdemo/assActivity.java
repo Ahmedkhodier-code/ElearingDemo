@@ -76,20 +76,7 @@ public class assActivity extends AppCompatActivity {
         pdfName = findViewById(R.id.pdfName);
         commentBtn = findViewById(R.id.commentBtn);
         material_Name = findViewById(R.id.pdfName);
-        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
-        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    if (doc.exists()) {
-                        role = doc.get("role") + "";
-                    } else {
-                        Log.d("Document", "No data");
-                    }
-                }
-            }
-        });
+
         annId = getIntent().getExtras().getString("annId");
         System.out.println("annId2: " + annId);
         currentAnn = (announcements) getIntent().getSerializableExtra("currentAnn");
@@ -101,7 +88,23 @@ public class assActivity extends AppCompatActivity {
         role = getInfo2();
         recyclerView = findViewById(R.id.comments);
         recyclerView2 = findViewById(R.id.material2);
-        getMaterial();
+        ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        role = doc.get("role") + "";
+                        if(!role.isEmpty() || role !="" || !role.equals("")){
+                            getMaterial(role);
+                        }
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
         getComments(recyclerView, annId, currentAnn.getType());
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,7 +291,9 @@ public class assActivity extends AppCompatActivity {
                         System.out.println("myurl" + myurl);
                         dialog.setProgress(100);
                         Toast.makeText(assActivity.this, "Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                        getMaterial();
+                        if(!role.isEmpty() || role !="" || !role.equals("")){
+                        getMaterial(role);
+                        }
                     } else {
                         dialog.dismiss();
                         Toast.makeText(assActivity.this, "UploadedFailed", Toast.LENGTH_SHORT).show();
@@ -357,10 +362,11 @@ public class assActivity extends AppCompatActivity {
                 });
     }
 
-    public void getMaterial() {
+    public void getMaterial(String role) {
         myListData = new ArrayList<>();
         System.out.println("is Student:" + role);
         if (role.equals("Student") || role == "Student") {
+            System.out.println("iam in if");
             db.collection("tasks").document(annId).collection("material").whereEqualTo("userEmail", currentUser.getEmail())
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -389,6 +395,7 @@ public class assActivity extends AppCompatActivity {
                         }
                     });
         } else {
+            System.out.println("iam in else");
             db.collection("tasks").document(annId).collection("material")
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

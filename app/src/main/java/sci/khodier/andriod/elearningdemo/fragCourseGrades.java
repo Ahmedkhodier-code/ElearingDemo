@@ -1,6 +1,5 @@
 package sci.khodier.andriod.elearningdemo;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,8 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,9 +25,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class fragCourseTools extends Fragment {
+public class fragCourseGrades extends Fragment {
     String courseId;
     Button deleteCourse;
     View rootView;
@@ -41,11 +37,20 @@ public class fragCourseTools extends Fragment {
     private static final String TAG = "ReadAndWriteSnippets";
     ArrayList<student> myListData = new ArrayList<>();
 
-
-    fragCourseTools(String courseId) {
+    fragCourseGrades(String courseId) {
         this.courseId = courseId;
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        rootView = inflater.inflate(R.layout.frag_course_grades, container, false);
+        getRole();
+        getStudent();
+
+        return rootView;
+    }
     public String getRole() {
         db.collection("users").document(currentUser.getEmail()).
                 get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -60,8 +65,7 @@ public class fragCourseTools extends Fragment {
                                 if (role == "Student"||role.equals("Student")) {
 
                                 } else {
-                                    LinearLayout lin = rootView.findViewById(R.id.courseDel);
-                                    lin.setVisibility(View.VISIBLE);
+
                                 }
                             } else {
                                 Log.d(TAG, "No such document");
@@ -73,39 +77,6 @@ public class fragCourseTools extends Fragment {
                 });
         System.out.println("the role is :" + role);
         return role;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.frag_course_tools, container, false);
-        // Inflate the layout for this fragment
-        deleteCourse = rootView.findViewById(R.id.deleteCourse);
-        getRole();
-        deleteCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.collection("courses").document(courseId)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                Intent intent = new Intent(getContext(), MainActivity.class);
-                                startActivity(intent);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error deleting document", e);
-                            }
-                        });
-            }
-        });
-        getStudent();
-        System.out.println("myListData" + myListData.toArray().toString());
-        return rootView;
     }
 
     public void getStudent() {
@@ -121,7 +92,7 @@ public class fragCourseTools extends Fragment {
                                 System.out.println("-------------------/////----------------");
                             }
                             RecyclerView recyclerView = rootView.findViewById(R.id.students);
-                            studentAdapter adapter = new studentAdapter(myListData, getContext());
+                            studentAdapterGrades adapter = new studentAdapterGrades(myListData, getContext());
                             recyclerView.setHasFixedSize(true);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                             recyclerView.setAdapter(adapter);

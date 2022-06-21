@@ -17,4 +17,7 @@
     <item
         android:id="@+id/nav_Ass"
         android:title="Assignments" />
+    <item
+        android:id="@+id/nav_grad"
+        android:title="Grades" />
 </menu>

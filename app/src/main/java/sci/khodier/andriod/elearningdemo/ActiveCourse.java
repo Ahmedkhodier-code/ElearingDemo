@@ -71,6 +71,10 @@ public class ActiveCourse extends AppCompatActivity implements NavigationView.On
             case R.id.nav_Ass:
                 replaceFragment(new fragCourseAss(courseId));
                 return true;
+            case R.id.nav_grad:
+                replaceFragment(new fragCourseGrades(courseId));
+                return true;
+
         }
         return false;
     }
