@@ -29,6 +29,7 @@ public class announcements implements Serializable {
         this.type = type;
         this.id = id;
         this.degree = degree;
+        this.courseId=courseId;
     }
 
     public String getMessage() {

@@ -61,13 +61,14 @@ public class studentAdapterGrades extends RecyclerView.Adapter<studentAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView Name, Email;
+        public TextView Name, Email, degree;
         public RelativeLayout relativeLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.Name = (TextView) itemView.findViewById(R.id.name);
             this.Email = itemView.findViewById(R.id.creator);
+            this.degree = itemView.findViewById(R.id.degree);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         }
     }

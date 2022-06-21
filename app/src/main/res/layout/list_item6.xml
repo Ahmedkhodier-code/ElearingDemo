@@ -4,9 +4,8 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
     android:background="@drawable/round3_button"
-    android:elevation="8dp">
+    android:elevation="4dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
@@ -61,7 +60,7 @@
 
                         <TextView
                             android:id="@+id/degree"
-                            android:text="10"
+                            android:text="NA"
                             android:typeface="serif"/>
 
 

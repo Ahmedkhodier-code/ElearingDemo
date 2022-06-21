@@ -11,8 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 
 public class fragCourseGrades extends Fragment {
     String courseId;
-    Button deleteCourse;
     View rootView;
     String role;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -47,7 +45,7 @@ public class fragCourseGrades extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.frag_course_grades, container, false);
         getRole();
-        getStudent();
+        getTasks();
 
         return rootView;
     }
@@ -79,20 +77,22 @@ public class fragCourseGrades extends Fragment {
         return role;
     }
 
-    public void getStudent() {
-        db.collection("courses").document(courseId).collection("Students")
+    public void getTasks() {
+        ArrayList<announcements> myListData = new ArrayList<>();
+        db.collection("tasks").whereEqualTo("courseId", courseId)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                myListData.add(new student(document.getString("name"),
-                                        document.getString("StudentEmail")));
+                                myListData.add(new announcements(document.getString("message"),
+                                        document.get("date") + "", document.getString("courseName"), "tasks",
+                                        document.getId(), document.get("courseId")+"", document.get("degree")+""));
                                 System.out.println("-------------------/////----------------");
                             }
                             RecyclerView recyclerView = rootView.findViewById(R.id.students);
-                            studentAdapterGrades adapter = new studentAdapterGrades(myListData, getContext());
+                            AnnTaskAdapterDegree adapter = new AnnTaskAdapterDegree(myListData, getContext());
                             recyclerView.setHasFixedSize(true);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                             recyclerView.setAdapter(adapter);
@@ -103,4 +103,5 @@ public class fragCourseGrades extends Fragment {
                     }
                 });
     }
+
 }
