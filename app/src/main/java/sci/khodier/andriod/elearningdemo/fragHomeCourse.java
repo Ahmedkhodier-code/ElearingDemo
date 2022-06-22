@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -104,30 +105,30 @@ public class fragHomeCourse extends Fragment {
         myListData = new ArrayList<>();
         db.collection("announcements").whereEqualTo("courseId", courseId)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        myListData.add(new announcements(document.getString("message"),
-                                                        document.get("date") + "",
-                                                        document.getString("courseName"),
-                                                        "announcements",
-                                                        document.getId(),
-                                                        document.get("courseId")+""));
-                        System.out.println("-------------------/////----------------");
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                myListData.add(new announcements(document.getString("message"),
+                                        document.get("date") + "",
+                                        document.getString("courseName"),
+                                        "announcements",
+                                        document.getId(),
+                                        document.get("courseId") + ""));
+                                System.out.println("-------------------/////----------------");
+                            }
+                            RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
+                            AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+                            recyclerView.setHasFixedSize(true);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                            Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
-                    AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    Log.w(TAG, "Error getting documents.", task.getException());
-                    Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
     }
 
     public String getRole() {
@@ -161,6 +162,7 @@ public class fragHomeCourse extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.frag_home_course, container, false);
         ll = rootView.findViewById(R.id.annCont);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refreshLayout);
 
         ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -185,11 +187,6 @@ public class fragHomeCourse extends Fragment {
         courseName = rootView.findViewById(R.id.courseName);
         loadCourse();
         getAnn();
-        RecyclerView recyclerView = rootView.findViewById(R.id.AnnAndTask);
-        AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
         saveAnn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,7 +258,16 @@ public class fragHomeCourse extends Fragment {
 
             }
         });
-
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        loadCourse();
+                        getAnn();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
         return rootView;
     }
 

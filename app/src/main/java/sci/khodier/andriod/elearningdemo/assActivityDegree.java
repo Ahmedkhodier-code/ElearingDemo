@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -35,16 +36,25 @@ public class assActivityDegree extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ass_degree);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshLayout);
         annId = getIntent().getExtras().getString("annId");
         courseId = getIntent().getExtras().getString("courseId");
-        System.out.println("annId2: " + annId);
         currentAnn = (announcements) getIntent().getSerializableExtra("currentAnn");
-        String s = getIntent().getExtras().getString("courseName");
-        System.out.println("sscourseId" + courseId);
+
         getStudent();
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getStudent();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
     }
 
     public void getStudent() {
+        myListData = new ArrayList<>();
         db.collection("courses").document(courseId).collection("Students")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -66,14 +76,15 @@ public class assActivityDegree extends AppCompatActivity {
                                                     myListData.add(new student(document.getString("name"),
                                                             document.getString("StudentEmail")));
                                                 }
+                                                RecyclerView recyclerView = findViewById(R.id.studentsdegree);
+                                                studentAdapterGrades adapter = new studentAdapterGrades(myListData, assActivityDegree.this, annId);
+                                                recyclerView.setHasFixedSize(true);
+                                                recyclerView.setLayoutManager(new LinearLayoutManager(assActivityDegree.this));
+                                                recyclerView.setAdapter(adapter);
                                             }
                                         });
                             }
-                            RecyclerView recyclerView = findViewById(R.id.studentsdegree);
-                            studentAdapterGrades adapter = new studentAdapterGrades(myListData, assActivityDegree.this, annId);
-                            recyclerView.setHasFixedSize(true);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(assActivityDegree.this));
-                            recyclerView.setAdapter(adapter);
+
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                             Toast.makeText(assActivityDegree.this, "Student failed.", Toast.LENGTH_SHORT).show();

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,11 +45,23 @@ public class fragCourseGrades extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.frag_course_grades, container, false);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refreshLayout);
+
         getRole();
         getTasks();
-
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getRole();
+                        getTasks();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
         return rootView;
     }
+
     public String getRole() {
         db.collection("users").document(currentUser.getEmail()).
                 get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -59,8 +72,8 @@ public class fragCourseGrades extends Fragment {
                             if (document.exists()) {
                                 Log.d(TAG, "currentUser data: " + document.getData());
                                 role = document.getString("role");
-                                System.out.println("role"+role);
-                                if (role == "Student"||role.equals("Student")) {
+                                System.out.println("role" + role);
+                                if (role == "Student" || role.equals("Student")) {
 
                                 } else {
 
@@ -88,7 +101,7 @@ public class fragCourseGrades extends Fragment {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 myListData.add(new announcements(document.getString("message"),
                                         document.get("date") + "", document.getString("courseName"), "tasks",
-                                        document.getId(),document.get("degree")+"", document.get("courseId")+"" ));
+                                        document.getId(), document.get("degree") + "", document.get("courseId") + ""));
                                 System.out.println("-------------------/////----------------");
                             }
                             RecyclerView recyclerView = rootView.findViewById(R.id.students);

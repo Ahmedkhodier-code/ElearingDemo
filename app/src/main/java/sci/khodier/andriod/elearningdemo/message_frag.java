@@ -78,6 +78,7 @@ public class message_frag extends Fragment {
         View rootView = inflater.inflate(R.layout.frag_message, container, false);
         progressBar = rootView.findViewById(R.id.progressBar);
         messageRecyclerView = rootView.findViewById(R.id.messageRecyclerView);
+
         // Inflate with ViewBinding
         // Set the root view from ViewBinding instance
         messageEditText = rootView.findViewById(R.id.messageEditText);

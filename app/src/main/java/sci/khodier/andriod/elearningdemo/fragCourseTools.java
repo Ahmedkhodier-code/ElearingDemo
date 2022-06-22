@@ -1,5 +1,7 @@
 package sci.khodier.andriod.elearningdemo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,8 +59,8 @@ public class fragCourseTools extends Fragment {
                             if (document.exists()) {
                                 Log.d(TAG, "currentUser data: " + document.getData());
                                 role = document.getString("role");
-                                System.out.println("role"+role);
-                                if (role == "Student"||role.equals("Student")) {
+                                System.out.println("role" + role);
+                                if (role == "Student" || role.equals("Student")) {
 
                                 } else {
                                     LinearLayout lin = rootView.findViewById(R.id.courseDel);
@@ -80,35 +83,61 @@ public class fragCourseTools extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.frag_course_tools, container, false);
         // Inflate the layout for this fragment
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refreshLayout);
+
         deleteCourse = rootView.findViewById(R.id.deleteCourse);
         getRole();
         deleteCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.collection("courses").document(courseId)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog)
+                        .setTitle("Delete File")
+                        .setMessage("Are you sure, you want to delete this file?")
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                Intent intent = new Intent(getContext(), MainActivity.class);
-                                startActivity(intent);
+                            public void onClick(DialogInterface dialog, int which) {
+                                db.collection("courses").document(courseId)
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error deleting document", e);
+                                            }
+                                        });
                             }
+
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error deleting document", e);
-                            }
-                        });
+                        .setNegativeButton("Cancel", null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
         getStudent();
         System.out.println("myListData" + myListData.toArray().toString());
+
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getStudent();
+
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
         return rootView;
     }
 
     public void getStudent() {
+        myListData = new ArrayList<>();
         db.collection("courses").document(courseId).collection("Students")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

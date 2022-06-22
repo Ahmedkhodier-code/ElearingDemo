@@ -1,61 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".fragHomeCourse">
+    tools:context=".fragCourseTools">
 
-
-    <TextView
-        android:id="@+id/courseName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_margin="30dp"
-        android:textSize="18sp" />
-
-
-    <LinearLayout
-        android:id="@+id/annCont"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginTop="30dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ann"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:backgroundTint="@color/black"
-            android:hint="Announcements">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".fragHomeCourse">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/announcements"
+
+            <TextView
+                android:id="@+id/courseName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_margin="30dp"
+                android:textSize="18sp" />
+
+
+            <LinearLayout
+                android:id="@+id/annCont"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ann"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:backgroundTint="@color/black"
+                    android:hint="Announcements">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/announcements"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="#706E6E"
+                        tools:ignore="InvalidId" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/saveAnn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round3_button"
+                    android:text="save"
+                    android:textColor="@color/username" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/AnnAndTask"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="#706E6E"
-                tools:ignore="InvalidId" />
+                android:layout_marginBottom="50dp"
+                android:scrollbars="vertical">
 
-        </com.google.android.material.textfield.TextInputLayout>
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <Button
-            android:id="@+id/saveAnn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/round3_button"
-            android:text="save"
-            android:textColor="@color/username" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/AnnAndTask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
-        android:scrollbars="vertical">
-
-    </androidx.recyclerview.widget.RecyclerView>
-</LinearLayout>
+</FrameLayout>

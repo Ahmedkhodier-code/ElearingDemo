@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,8 +79,10 @@ public class fragCourseContent extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.frag_course_content, container, false);
-        material_Name=rootView.findViewById(R.id.nameMaterial);
+        material_Name = rootView.findViewById(R.id.nameMaterial);
         // Inflate the layout for this fragment
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refreshLayout);
+
         loadCourse();
         upload = rootView.findViewById(R.id.uploadpdf);
         db.collection("users").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -91,7 +94,7 @@ public class fragCourseContent extends Fragment {
                         Log.d(TAG, "currentUser data: " + document.getData());
                         role = document.getString("role");
                         System.out.println("the role1 is :" + role);
-                        if (role == "Student"|| role.equals("Student")) {
+                        if (role == "Student" || role.equals("Student")) {
                             rootView.findViewById(R.id.upload).setVisibility(View.GONE);
                         }
 
@@ -104,7 +107,7 @@ public class fragCourseContent extends Fragment {
             }
         });
 
-        if (role == "Student"|| role.equals("Student")) {
+        if (role == "Student" || role.equals("Student")) {
             rootView.findViewById(R.id.upload).setVisibility(View.GONE);
         }
         getMaterial(role);
@@ -117,6 +120,17 @@ public class fragCourseContent extends Fragment {
                 startActivityForResult(galleryIntent, 1);
             }
         });
+        // Refresh  the layout
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        loadCourse();
+                        getMaterial(role);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
         return rootView;
     }
 
@@ -147,44 +161,45 @@ public class fragCourseContent extends Fragment {
 
 
     public void getMaterial(String role) {
+        myListData = new ArrayList<>();
         System.out.println("from content");
         db.collection("courses").document(courseId).collection("material")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        myListData.add(new material(document.getId(),
-                                Objects.requireNonNull(document.getString("name"))
-                                , document.getString("extension")
-                                , document.getString("type")
-                                , document.getString("courseId"),
-                                document.getString("time"),document.getString("username"),document.getString("id")));
-                        System.out.println("-----------------------------------");
-                    }
-                    RecyclerView recyclerView = rootView.findViewById(R.id.material);
-                    System.out.println("the role3 is :" + role);
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                myListData.add(new material(document.getId(),
+                                        Objects.requireNonNull(document.getString("name"))
+                                        , document.getString("extension")
+                                        , document.getString("type")
+                                        , document.getString("courseId"),
+                                        document.getString("time"), document.getString("username"), document.getString("id")));
+                                System.out.println("-----------------------------------");
+                            }
+                            RecyclerView recyclerView = rootView.findViewById(R.id.material);
+                            System.out.println("the role3 is :" + role);
 
-                    materialAdapter adapter = new materialAdapter(myListData, getContext(), "mat" , role);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    Log.w(TAG, "Error getting documents.", task.getException());
-                    Toast.makeText(getContext(), "documents failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                            materialAdapter adapter = new materialAdapter(myListData, getContext(), "mat", role);
+                            recyclerView.setHasFixedSize(true);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                            Toast.makeText(getContext(), "documents failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Here we are initialising the progress dialog box
-        if(material_Name.getText().toString().isEmpty()||material_Name.getText().toString().equals("")||material_Name.getText().toString()==""){
+        if (material_Name.getText().toString().isEmpty() || material_Name.getText().toString().equals("") || material_Name.getText().toString() == "") {
             Toast.makeText(getContext(), "Please Enter the name of material", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             dialog = new ProgressDialog(getContext());
             dialog.setMessage("Uploading pdf");
             // this will show message uploading
@@ -221,7 +236,7 @@ public class fragCourseContent extends Fragment {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
                         String currentDateandTime = sdf.format(new Date());
                         Map<String, Object> material = new HashMap<>();
-                        material.put("name", material_Name.getText().toString()+"."+getExt(mimeType));
+                        material.put("name", material_Name.getText().toString() + "." + getExt(mimeType));
                         material.put("id", materialName);
                         material.put("timestamp", FieldValue.serverTimestamp());
                         material.put("extension", getExt(mimeType));

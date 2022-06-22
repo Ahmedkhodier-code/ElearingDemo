@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,9 +27,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 
-
 public class frag_ActivityStream extends Fragment {
-    String role ;
+    String role;
     Context context;
     FirebaseUser currentUser;
     ArrayList<announcements> myListData = new ArrayList<>();
@@ -46,74 +46,74 @@ public class frag_ActivityStream extends Fragment {
         myListData = new ArrayList<>();
         db.collection("announcements")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        myListData.add(new announcements(document.getString("message"), document.get("date") + "",
-                                document.getString("courseName"), "announcements",
-                                document.getId() ,""+ document.get("courseId")));
-                        System.out.println("-------------------/////----------------");
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                myListData.add(new announcements(document.getString("message"), document.get("date") + "",
+                                        document.getString("courseName"), "announcements",
+                                        document.getId(), "" + document.get("courseId")));
+                                System.out.println("-------------------/////----------------");
+                            }
+                            RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
+                            AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+                            recyclerView.setHasFixedSize(true);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                            Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
-                    AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    Log.w(TAG, "Error getting documents.", task.getException());
-                    Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
     }
 
     public void getTasks() {
         myListData = new ArrayList<>();
         db.collection("tasks")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        myListData.add(new announcements(document.getString("message"),
-                                document.get("date") + "", document.getString("courseName"), "tasks",
-                                document.getId(), ""+document.get("courseId")));
-                        System.out.println("-------------------/////----------------");
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                myListData.add(new announcements(document.getString("message"),
+                                        document.get("date") + "", document.getString("courseName"), "tasks",
+                                        document.getId(), "" + document.get("courseId")));
+                                System.out.println("-------------------/////----------------");
+                            }
+                            RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
+                            AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+                            recyclerView.setHasFixedSize(true);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                            Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
-                    AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    Log.w(TAG, "Error getting documents.", task.getException());
-                    Toast.makeText(getContext(), "Student failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
     }
 
     public String getRole() {
         db.collection("users").document(currentUser.getEmail()).
                 get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "currentUser data: " + document.getData());
-                        role = document.getString("role");
-                    } else {
-                        Log.d(TAG, "No such document");
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d(TAG, "currentUser data: " + document.getData());
+                                role = document.getString("role");
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+                });
         System.out.println("the role is :" + role);
         return role;
     }
@@ -123,6 +123,8 @@ public class frag_ActivityStream extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootview = inflater.inflate(R.layout.frag__activity_stream, container, false);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.refreshLayout);
+
         ann = rootview.findViewById(R.id.annBtn);
         task = rootview.findViewById(R.id.taskBtn);
         myListData = new ArrayList<>();
@@ -150,6 +152,21 @@ public class frag_ActivityStream extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+
+                        getAnn();
+                        RecyclerView recyclerView = rootview.findViewById(R.id.AnnAndTask);
+                        AnnTaskAdapter adapter = new AnnTaskAdapter(myListData, getContext());
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        recyclerView.setAdapter(adapter);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
         return rootview;
     }
 

@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -66,6 +67,7 @@ public class fragCourse extends Fragment implements View.OnClickListener {
         rootView = inflater.inflate(R.layout.frag_courses, container, false);
         TransitionInflater inflater0 = TransitionInflater.from(requireContext());
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refreshLayout);
         progressbar = rootView.findViewById(R.id.progressbar);
         progressbar.setVisibility(View.VISIBLE);
         name = rootView.findViewById(R.id.name);
@@ -95,6 +97,30 @@ public class fragCourse extends Fragment implements View.OnClickListener {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    if (doc.exists()) {
+                                        name.setText("Hi " + doc.get("username"));
+                                        role = doc.get("role") + "";
+                                        getCourses();
+
+                                    } else {
+                                        Log.d("Document", "No data");
+                                    }
+                                }
+                            }
+                        });
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
         return rootView;
     }
 
@@ -112,71 +138,77 @@ public class fragCourse extends Fragment implements View.OnClickListener {
     }
 
     public void getCourses() {
+        myListData = new ArrayList<>();
         if (role.equals("Instructor")) {
             db.collection("courses").whereEqualTo("creator", currentUser.getEmail())
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            Log.d(TAG, "the img" + " => " + document.getString("img"));
-                            myListData.add(new Course(Objects.requireNonNull(document.getString("name")),
-                                    document.getId(), document.getString("img"), document.getString("creatorName")));
-                            System.out.println("-----------------------------------");
-                            progressbar.setVisibility(View.GONE);
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    Log.d(TAG, "the img" + " => " + document.getString("img"));
+                                    myListData.add(new Course(Objects.requireNonNull(document.getString("name")),
+                                            document.getId(), document.getString("img"), document.getString("creatorName")));
+                                    System.out.println("-----------------------------------");
+                                    progressbar.setVisibility(View.GONE);
+                                }
+                            } else {
+                                Log.w(TAG, "Error getting documents.", task.getException());
+                                Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
+                                System.out.println("result of failed: " + task.getException());
+                                progressbar.setVisibility(View.GONE);
+                            }
+                            RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
+                            courseAdapter adapter = new courseAdapter(myListData, context);
+                            recyclerView.setHasFixedSize(true);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                            recyclerView.setAdapter(adapter);
                         }
-                    } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
-                        Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
-                        System.out.println("result of failed: " + task.getException());
-                        progressbar.setVisibility(View.GONE);
-                    }
-                }
-            });
+                    });
         } else if (role.equals("Student")) {
             ArrayList<String> temp = new ArrayList<>();
             db.collection("users").document(currentUser.getEmail()).collection("courses")
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            temp.add(document.getString("courseId"));
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    temp.add(document.getString("courseId"));
+                                }
+                            } else {
+                                Log.w(TAG, "Error getting documents.", task.getException());
+                                Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
+                                System.out.println("result of failed: " + task.getException());
+                            }
                         }
-                    } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
-                        Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
-                        System.out.println("result of failed: " + task.getException());
-                    }
-                }
-            });
+                    });
             db.collection("courses")
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        int i = 0;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            if (i < temp.size()) {
-                                if (temp.get(i).equals(document.getId())) {
-                                    myListData.add(new Course(Objects.requireNonNull(document.getString("name")), document.getId(), document.getString("img"), document.getString("creatorName")));
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                int i = 0;
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    if (i < temp.size()) {
+                                        if (temp.get(i).equals(document.getId())) {
+                                            myListData.add(new Course(Objects.requireNonNull(document.getString("name")), document.getId(), document.getString("img"), document.getString("creatorName")));
+                                        }
+                                    }
+                                    System.out.println("-----------------------------------");
+                                    i++;
                                 }
+                            } else {
+                                Log.w(TAG, "Error getting documents.", task.getException());
+                                Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
+                                System.out.println("result of failed: " + task.getException());
                             }
-                            System.out.println("-----------------------------------");
-                            i++;
+                            progressbar.setVisibility(View.GONE);
                         }
-                    } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
-                        Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
-                        System.out.println("result of failed: " + task.getException());
-                    }
-                    progressbar.setVisibility(View.GONE);
-                }
-            });
+                    });
         }
     }
 
