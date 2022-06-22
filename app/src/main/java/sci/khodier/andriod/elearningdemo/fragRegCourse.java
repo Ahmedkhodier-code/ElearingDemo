@@ -50,10 +50,9 @@ public class fragRegCourse extends Fragment {
     Button add;
     boolean flage;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    TextInputEditText courseName, password;
+    TextInputEditText courseName, password , creatorName;
     private static final String TAG = "ReadAndWriteSnippets";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     public fragRegCourse(Context context) {
         this.context = context;
     }
@@ -67,6 +66,7 @@ public class fragRegCourse extends Fragment {
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
         add = rootView.findViewById(R.id.addCourse);
         password = rootView.findViewById(R.id.password);
+        creatorName=rootView.findViewById(R.id.creatorName);
         courseName = rootView.findViewById(R.id.courseName);
         checkBox = rootView.findViewById(R.id.checkBox);
         checkBox.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +94,7 @@ public class fragRegCourse extends Fragment {
             public void onClick(View v) {
                 System.out.println("add clicked");
                 Toast.makeText(context, "you clicked add", Toast.LENGTH_LONG).show();
-                if (searchCourse(courseName.getText() + "", password.getText() + "")) {
+                if (searchCourse(courseName.getText() + "", password.getText() + "" , creatorName.getText()+"")) {
                     loadFragment(new fragCourse(context, currentUser));
                 }
             }
@@ -102,8 +102,8 @@ public class fragRegCourse extends Fragment {
         return rootView;
     }
 
-    public boolean searchCourse(String courseName, String password) {
-        db.collection("courses").whereEqualTo("name", courseName).whereEqualTo("password", password)
+    public boolean searchCourse(String courseName, String password , String creator) {
+        db.collection("courses").whereEqualTo("name", courseName).whereEqualTo("password", password).whereEqualTo("creator",creator)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
