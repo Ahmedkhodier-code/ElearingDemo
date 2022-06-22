@@ -75,11 +75,11 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <FrameLayout
-        android:id="@+id/add"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
+            android:id="@+id/add"
             android:layout_width="50.7dp"
             android:layout_height="55.3dp"
             android:layout_marginLeft="30dp"
