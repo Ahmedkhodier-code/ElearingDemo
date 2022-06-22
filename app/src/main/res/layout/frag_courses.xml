@@ -72,31 +72,29 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/add"
-                android:layout_width="50.7dp"
-                android:layout_height="55.3dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="630dp"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/white_hexagone"
-                android:clickable="true">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="15.3dp"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/black_plus" />
-
-            </FrameLayout>
-        </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <FrameLayout
+        android:id="@+id/add"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="50.7dp"
+            android:layout_height="55.3dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="600dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/white_hexagone"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="15.3dp"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/black_plus" />
+        </FrameLayout>
+    </FrameLayout>
 </FrameLayout>
