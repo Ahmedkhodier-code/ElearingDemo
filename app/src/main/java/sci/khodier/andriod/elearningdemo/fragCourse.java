@@ -101,6 +101,7 @@ public class fragCourse extends Fragment implements View.OnClickListener {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
+                        myListData = new ArrayList<>();
                         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -110,7 +111,6 @@ public class fragCourse extends Fragment implements View.OnClickListener {
                                         name.setText("Hi " + doc.get("username"));
                                         role = doc.get("role") + "";
                                         getCourses();
-
                                     } else {
                                         Log.d("Document", "No data");
                                     }
@@ -138,7 +138,6 @@ public class fragCourse extends Fragment implements View.OnClickListener {
     }
 
     public void getCourses() {
-        myListData = new ArrayList<>();
         if (role.equals("Instructor")) {
             db.collection("courses").whereEqualTo("creator", currentUser.getEmail())
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
