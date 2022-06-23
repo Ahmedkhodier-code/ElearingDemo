@@ -1,6 +1,9 @@
 package sci.khodier.andriod.elearningdemo;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +32,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import sci.khodier.andriod.elearningdemo.databinding.FragSignupBinding;
 
 public class fragLogin extends Fragment implements View.OnClickListener {
@@ -35,25 +40,23 @@ public class fragLogin extends Fragment implements View.OnClickListener {
     ImageView next;
     Context context;
     private ProgressBar progressbar;
-    EditText  Email  ,password;
+    EditText Email, password;
     TextInputLayout pass;
-    String Email0,password0;
-
+    String Email0, password0;
     private static final String TAG = "SignInActivity";
-//-------------------
-
+    TextView forget;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     public fragLogin(Context context) {
-        this.context=context;
+        this.context = context;
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = (ViewGroup) inflater.inflate(R.layout.frag_login, container, false);
-        loginFrame=rootView.findViewById(R.id.signup);
+        loginFrame = rootView.findViewById(R.id.signup);
         loginFrame.setOnClickListener(this);
         next = (ImageView) rootView.findViewById(R.id.toogle);
         next.setOnClickListener(this);
@@ -67,7 +70,39 @@ public class fragLogin extends Fragment implements View.OnClickListener {
 
 
         //----------------
-
+        forget = rootView.findViewById(R.id.forget);
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Email0 = Email.getText().toString();
+                if (TextUtils.isEmpty(Email0)) {
+                    Toast.makeText(context, "Please enter email!!", Toast.LENGTH_LONG).show();
+                    return;
+                } else {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    String emailAddress = Email0;
+                    System.out.println("emailAddress" + emailAddress);
+                    auth.sendPasswordResetEmail(emailAddress)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "Email sent.");
+                                    }
+                                }
+                            });
+                    new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog)
+                            .setTitle("Email sent").setMessage("Please Check Your Email!")
+                            .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(R.drawable.envelope)
+                            .show();
+                }
+            }
+        });
         return rootView;
     }
 
@@ -75,19 +110,19 @@ public class fragLogin extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
         }
     }
 
     @Override
     public void onClick(View v) {
-        if(v==loginFrame){
+        if (v == loginFrame) {
             loadFragment(new fragSignup(context));
         }
-        if(v==next) {
+        if (v == next) {
             Email0 = Email.getText().toString();
             password0 = password.getText().toString();
-            signIn(Email0,password0);
+            signIn(Email0, password0);
         }
     }
 
@@ -104,39 +139,37 @@ public class fragLogin extends Fragment implements View.OnClickListener {
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(context, "Please enter email!!", Toast.LENGTH_LONG).show();
             return;
-        }else
-        if (TextUtils.isEmpty(password)) {
+        } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(context, "Please enter password!!", Toast.LENGTH_LONG).show();
             return;
-        }else
-        {
-        // [START sign_in_with_email]
-        progressbar.setVisibility(View.VISIBLE);
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser currentUser = mAuth.getCurrentUser();
-                            System.out.println("-----------------------------------");
-                            System.out.println(currentUser.getEmail() +""+ currentUser.getUid());
-                            System.out.println("-----------------------------------");
-                            Intent intent =new Intent(context ,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            progressbar.setVisibility(View.GONE);
-                            intent.putExtra("currentUser",currentUser);
-                            startActivity(intent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(context,task.getException().toString(), Toast.LENGTH_SHORT).show();
-                            System.out.println("result of failed: "+task.getException());
-                            progressbar.setVisibility(View.GONE);
+        } else {
+            // [START sign_in_with_email]
+            progressbar.setVisibility(View.VISIBLE);
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser currentUser = mAuth.getCurrentUser();
+                                System.out.println("-----------------------------------");
+                                System.out.println(currentUser.getEmail() + "" + currentUser.getUid());
+                                System.out.println("-----------------------------------");
+                                Intent intent = new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                progressbar.setVisibility(View.GONE);
+                                intent.putExtra("currentUser", currentUser);
+                                startActivity(intent);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                System.out.println("result of failed: " + task.getException());
+                                progressbar.setVisibility(View.GONE);
+                            }
                         }
-                    }
-                });
-        // [END sign_in_with_email]
+                    });
+            // [END sign_in_with_email]
         }
     }
 
