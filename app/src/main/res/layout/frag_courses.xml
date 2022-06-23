@@ -45,7 +45,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="left"
                     android:layout_marginLeft="20dp"
-                    android:text="The Courses"
+                    android:text="Courses"
                     android:textSize="25dp" />
 
                 <ProgressBar
