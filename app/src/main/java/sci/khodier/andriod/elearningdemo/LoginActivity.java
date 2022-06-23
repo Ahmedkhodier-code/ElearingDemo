@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
         //------------------------------------------
 //        next = (ImageView)findViewById(R.id.toogle);
 //        next.setOnClickListener(this);
-
+        System.out.println("");
         FragmentManager fragmentManager=getSupportFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragments,new fragLogin(this));
@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run()
             {
                 //start your activity here
+
             }
         };
         handler.postDelayed(runnable, 5000);
