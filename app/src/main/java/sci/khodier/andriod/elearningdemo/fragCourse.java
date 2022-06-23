@@ -1,7 +1,6 @@
 package sci.khodier.andriod.elearningdemo;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,11 +36,12 @@ import java.util.Objects;
 
 public class fragCourse extends Fragment implements View.OnClickListener {
 
-    private final Context context;
+    private Context context;
     TextView name;
     FrameLayout addCourse;
     private ProgressBar progressbar;
-    FirebaseUser currentUser;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference ref;
     ArrayList<Course> myListData = new ArrayList<>();
@@ -48,9 +49,11 @@ public class fragCourse extends Fragment implements View.OnClickListener {
     String role;
     private static final String TAG = "ReadAndWriteSnippets";
 
-    public fragCourse(Context context, FirebaseUser currentUser) {
+    public fragCourse(Context context ) {
         this.context = context;
-        this.currentUser = currentUser;
+    }
+
+    public fragCourse() {
     }
 
     private void loadFragment(Fragment fragment) {

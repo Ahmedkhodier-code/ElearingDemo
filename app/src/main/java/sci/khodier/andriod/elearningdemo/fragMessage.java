@@ -30,15 +30,18 @@ import java.util.Objects;
 
 public class fragMessage extends Fragment {
     View rootView;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
     ArrayList<chat> myListData = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "ReadAndWriteSnippets";
-    FirebaseUser currentUser;
     Context context;
 
-    public fragMessage(Context context, FirebaseUser currentUser) {
+    public fragMessage(Context context) {
         this.context = context;
-        this.currentUser = currentUser;
+    }
+
+    public fragMessage() {
     }
 
     @Override

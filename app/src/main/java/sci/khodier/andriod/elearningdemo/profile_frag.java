@@ -33,7 +33,8 @@ import java.util.Objects;
 
 public class profile_frag extends Fragment implements View.OnClickListener {
     Context context;
-    FirebaseUser currentUser;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference ref;
     ImageView profilePic;
@@ -42,9 +43,12 @@ public class profile_frag extends Fragment implements View.OnClickListener {
     Bitmap bitmap = null;
     Bitmap bt = null;
 
-    public profile_frag(Context context, FirebaseUser currentUser) {
+    public profile_frag(Context context) {
         this.context = context;
-        this.currentUser = currentUser;
+
+    }
+
+    public profile_frag() {
     }
 
     @Override
@@ -66,6 +70,7 @@ public class profile_frag extends Fragment implements View.OnClickListener {
         username = rootView.findViewById(R.id.username);
         level = rootView.findViewById(R.id.level);
         gender = rootView.findViewById(R.id.gender);
+
         ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

@@ -175,7 +175,7 @@ public class fragAddCourse extends Fragment implements View.OnClickListener {
             System.out.println("buttom create clicked");
             Toast.makeText(context, courseName.getText(), Toast.LENGTH_LONG).show();
             addCourse(courseName.getText() + "", sItem ,password.getText()+"");
-            loadFragment(new fragCourse(context, currentUser));
+            loadFragment(new fragCourse(context));
         }
     }
 

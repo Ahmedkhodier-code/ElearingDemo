@@ -95,7 +95,7 @@ public class fragRegCourse extends Fragment {
                 System.out.println("add clicked");
                 Toast.makeText(context, "you clicked add", Toast.LENGTH_LONG).show();
                 if (searchCourse(courseName.getText() + "", password.getText() + "" , creatorName.getText()+"")) {
-                    loadFragment(new fragCourse(context, currentUser));
+                    loadFragment(new fragCourse(context));
                 }
             }
         });
