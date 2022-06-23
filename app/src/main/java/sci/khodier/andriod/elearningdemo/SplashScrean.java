@@ -49,7 +49,7 @@ public class SplashScrean extends Activity {
                 if (currentUser != null) {
                     mAuth.addAuthStateListener(mAuthListener);
                 }
-                startActivity(new Intent(SplashScrean.this, LoginActivity2.class));
+                startActivity(new Intent(SplashScrean.this, LoginActivity.class));
                 finish();
             }
         }, 1500L); //1.5seconds

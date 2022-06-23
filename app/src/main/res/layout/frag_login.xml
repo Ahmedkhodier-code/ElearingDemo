@@ -24,7 +24,6 @@
             android:layout_gravity="left"
             android:gravity="left"
             android:text="LOGIN"
-            android:textColor="#fefefe"
             android:textSize="35sp" />
 
         <TextView
@@ -33,7 +32,6 @@
             android:layout_gravity="left"
             android:layout_marginTop="52.7dp"
             android:text="Email"
-            android:textColor="#fefefe"
             android:textSize="20sp" />
 
         <EditText
@@ -45,8 +43,6 @@
             android:background="@android:color/transparent"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
             android:textCursorDrawable="@drawable/white_cursor_color"
             android:textSize="15sp" />
 
@@ -64,7 +60,6 @@
             android:layout_gravity="left"
             android:layout_marginTop="37.3dp"
             android:text="Password"
-            android:textColor="#fefefe"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -85,7 +80,6 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:inputType="textPassword"
-                    android:textColor="#FFFFFF"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -106,7 +100,6 @@
             android:layout_marginTop="17.3dp"
             android:clickable="true"
             android:text="Forgot Password?"
-            android:textColor="#f2f2f3"
             android:textSize="12.3sp" />
 
         <LinearLayout
@@ -129,9 +122,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/round3_button"
                 android:text="Sign up"
-                android:textColor="#fefefe"
                 android:textSize="15sp"
-
+                android:textColor="@color/black"
 
                 />
 

@@ -105,7 +105,7 @@ public class profile_frag extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if(v==signOut) {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(context ,LoginActivity2.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Intent intent = new Intent(context , LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
     }
