@@ -71,36 +71,6 @@ public class fragHomeCourse extends Fragment {
         this.courseId = courseId;
     }
 
-    private void sendNotification(String messageBody, String title) {
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(getContext(), channelId)
-                        .setSmallIcon(R.drawable.notification)
-                        .setContentTitle(title)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager = (NotificationManager)
-                getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-        }
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-    }
-
     public void getAnn() {
         myListData = new ArrayList<>();
         db.collection("announcements").whereEqualTo("courseId", courseId)
@@ -213,8 +183,6 @@ public class fragHomeCourse extends Fragment {
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                             announcements.setText("");
                                             Toast.makeText(getContext(), "your message has been uploaded", Toast.LENGTH_SHORT).show();
-                                            sendNotification("new announcement added click to see", "new announcement");
-
                                             fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
                                                     .setMessageId(Integer.toString(messageId))
                                                     .addData("my_message", announcements.getText().toString())
@@ -238,7 +206,6 @@ public class fragHomeCourse extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            sendNotification("new announcement added click to see", "new announcement");
                                             Log.d(TAG, "announcements added " + task.getResult());
                                             System.out.println("user added in db announcements collection: " + task.getResult());
                                         }
