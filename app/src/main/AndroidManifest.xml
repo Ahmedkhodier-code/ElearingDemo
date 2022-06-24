@@ -25,24 +25,36 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".assActivityDegree"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".chatActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".assActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".ActiveCourse"
             android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ElearingDemo" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity
             android:name=".SplashScrean"
             android:exported="true"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,6 +76,8 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
     </application>
 
