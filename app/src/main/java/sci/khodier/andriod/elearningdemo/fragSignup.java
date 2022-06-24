@@ -53,6 +53,9 @@ public class fragSignup extends Fragment implements View.OnClickListener {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     Boolean checkUser;
 
+    public fragSignup() {
+    }
+
     public fragSignup(Context context) {
         this.context = context;
     }
@@ -77,11 +80,11 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                 switch (checkedId) {
                     case R.id.Instructor:
                         type = "Instructor";
-                        Toast.makeText(context, "Instructor", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Instructor", Toast.LENGTH_LONG).show();
                         flage = false;
                         break;
                     case R.id.Student:
-                        Toast.makeText(context, "Student", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Student", Toast.LENGTH_LONG).show();
                         flage = false;
                         type = "Student";
                         break;
@@ -94,21 +97,21 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                 switch (checkedId) {
                     case R.id.one:
                         level = 1;
-                        Toast.makeText(context, "one", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "one", Toast.LENGTH_LONG).show();
                         flage1 = false;
                         break;
                     case R.id.two:
-                        Toast.makeText(context, "two", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "two", Toast.LENGTH_LONG).show();
                         flage1 = false;
                         level = 2;
                         break;
                     case R.id.three:
-                        Toast.makeText(context, "three", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "three", Toast.LENGTH_LONG).show();
                         flage1 = false;
                         level = 3;
                         break;
                     case R.id.four:
-                        Toast.makeText(context, "four", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "four", Toast.LENGTH_LONG).show();
                         flage1 = false;
                         level = 4;
                         break;
@@ -121,20 +124,20 @@ public class fragSignup extends Fragment implements View.OnClickListener {
         Spinner dropdown1 = rootView.findViewById(R.id.spinner);
         String[] items = new String[]{"Arts", "Science", "Commerce", "Engineering", "Computers and Information"};
         String[] items1 = new String[]{"Helwan", "Cairo", "Alex", "Ain Shams", "Mansoura", "Al-Azhar"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, items);
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, items1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items1);
         dropdown1.setAdapter(adapter1);
         dropdown1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.v("item", (String) parent.getItemAtPosition(position));
                 university = (String) parent.getItemAtPosition(position);
-                Toast.makeText(context, university + " is selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), university + " is selected", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(context, "Please enter your college!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please enter your college!", Toast.LENGTH_LONG).show();
             }
         });
         dropdown.setAdapter(adapter);
@@ -143,12 +146,12 @@ public class fragSignup extends Fragment implements View.OnClickListener {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.v("item", (String) parent.getItemAtPosition(position));
                 college = (String) parent.getItemAtPosition(position);
-                Toast.makeText(context, college + " is selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), college + " is selected", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(context, "Please enter your college!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please enter your college!", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -164,7 +167,7 @@ public class fragSignup extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == signupFrame) {
-            loadFragment(new fragLogin(context));
+            loadFragment(new fragLogin(getContext()));
         }
         if (v == next) {
             registerNewUser();
@@ -180,27 +183,27 @@ public class fragSignup extends Fragment implements View.OnClickListener {
         phone0 = phone.getText().toString();
         // Validations for input email and password
         if (TextUtils.isEmpty(username0)) {
-            Toast.makeText(context, "Please enter username!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter username!", Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(Email0)) {
-            Toast.makeText(context, "Please enter email!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter email!", Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(password0)) {
-            Toast.makeText(context, "Please enter password!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter password!", Toast.LENGTH_LONG).show();
             return;
         }
-        if (TextUtils.isEmpty(phone0) ) {
-            Toast.makeText(context, "Please enter phone!", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(phone0)) {
+            Toast.makeText(getContext(), "Please enter phone!", Toast.LENGTH_LONG).show();
             return;
         }
         if (flage) {
-            Toast.makeText(context, "Please enter your type!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter your type!", Toast.LENGTH_LONG).show();
             return;
         }
         if (flage1) {
-            Toast.makeText(context, "Please enter your level!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter your level!", Toast.LENGTH_LONG).show();
             return;
         }
         progressbar.setVisibility(View.VISIBLE);
@@ -215,10 +218,10 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                             addUser(username0, Email0, college, phone0, type, university);
 
                             System.out.println("result of success: " + task.getResult());
-                            Toast.makeText(context, "Registration successful!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Registration successful!", Toast.LENGTH_LONG).show();
                             // hide the progress bar
                             // if the user created intent to login activity
-                            Intent intent = new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            Intent intent = new Intent(getContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             intent.putExtra("currentUser", currentUser);
                             progressbar.setVisibility(View.GONE);
@@ -226,7 +229,7 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                         } else {
                             //     System.out.println("result of failed: "+task.getResult());
                             // Registration failed
-                            Toast.makeText(context, "Registration failed!!" + " Please try another Email", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Registration failed!!" + " Please try another Email", Toast.LENGTH_LONG).show();
                             // hide the progress bar
                             progressbar.setVisibility(View.GONE);
                         }
@@ -257,7 +260,7 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "user added " + task.getResult());
                             System.out.println("user added in db: " + task.getResult());
-                            checkUser=true;
+                            checkUser = true;
                         }
                     }
                 })
@@ -265,7 +268,7 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
-                        checkUser=false;
+                        checkUser = false;
                         System.out.println("--------------------------------");
                         System.out.println("user doesn't added " + e.toString());
                         System.out.println("--------------------------------");

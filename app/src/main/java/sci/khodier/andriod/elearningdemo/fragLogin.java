@@ -52,6 +52,8 @@ public class fragLogin extends Fragment implements View.OnClickListener {
         this.context = context;
     }
 
+    public fragLogin() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

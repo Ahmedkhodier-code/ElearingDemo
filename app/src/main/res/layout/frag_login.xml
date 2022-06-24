@@ -112,7 +112,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Need an account?"
-                android:textColor="#fefefe"
                 android:textSize="13dp" />
 
 
@@ -123,8 +122,7 @@
                 android:background="@drawable/round3_button"
                 android:text="Sign up"
                 android:textSize="15sp"
-                android:textColor="@color/black"
-
+                android:textColor="@color/white"
                 />
 
         </LinearLayout>

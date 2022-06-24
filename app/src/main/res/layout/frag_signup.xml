@@ -23,7 +23,6 @@
             android:layout_gravity="left"
             android:gravity="left"
             android:text="SIGN UP"
-            android:textColor="#fefefe"
             android:textSize="35sp" />
 
         <TextView
@@ -32,7 +31,6 @@
             android:layout_gravity="left"
             android:layout_marginTop="22.7dp"
             android:text="Username"
-            android:textColor="#fefefe"
             android:textSize="17sp" />
 
         <EditText
@@ -42,10 +40,8 @@
             android:layout_gravity="left"
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
-            android:inputType="textEmailAddress"
+            android:inputType="textEmailAddress|textAutoCorrect"
             android:maxLines="1"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
             android:textCursorDrawable="@drawable/white_cursor_color"
             android:textSize="15sp" />
 
@@ -62,7 +58,6 @@
             android:layout_gravity="left"
             android:layout_marginTop="15dp"
             android:text="Email"
-            android:textColor="#fefefe"
             android:textSize="17sp" />
 
         <EditText
@@ -72,10 +67,8 @@
             android:layout_gravity="left"
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
-            android:inputType="textEmailAddress"
+            android:inputType="textEmailAddress|textAutoCorrect"
             android:maxLines="1"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
             android:textCursorDrawable="@drawable/white_cursor_color"
             android:textSize="15sp" />
 
@@ -93,7 +86,6 @@
             android:layout_gravity="left"
             android:layout_marginTop="15dp"
             android:text="Password"
-            android:textColor="#fefefe"
             android:textSize="17sp" />
 
         <LinearLayout
@@ -115,7 +107,6 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:inputType="textPassword"
-                    android:textColor="#FFFFFF"
                     android:textSize="15sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -136,7 +127,6 @@
             android:layout_gravity="left"
             android:layout_marginTop="15dp"
             android:text="Phone"
-            android:textColor="#fefefe"
             android:textSize="17sp" />
 
         <LinearLayout
@@ -144,12 +134,22 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <Spinner
+                android:tag="@string/com_lamudi_phonefield_flag_spinner"
+                android:layout_width="@dimen/spinner_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:dropDownWidth="@dimen/spinner_height"
+                android:popupBackground="@color/pf_white"
+                />
+
             <EditText
                 android:id="@+id/editTextPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="11"
                 android:hint="01XXXXXXXXX"
+                android:maxLength="11"
                 android:inputType="phone"
                 android:textSize="15sp" />
 
@@ -171,15 +171,44 @@
                 android:layout_height="35dp"
                 android:layout_gravity="left"
                 android:text="University of : "
-                android:textColor="#fefefe"
                 android:textSize="17sp" />
 
-            <Spinner
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight=".28"
+                android:background="@drawable/spinner_border"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/drop1" />
+
+            </RelativeLayout>
+
+            <!--<Spinner
+                style=""
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:background="@android:drawable/btn_dropdown"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown" />-->
 
         </LinearLayout>
 
@@ -199,15 +228,37 @@
                 android:layout_height="35dp"
                 android:layout_gravity="left"
                 android:text="Faculty of : "
-                android:textColor="#fefefe"
                 android:textSize="17sp" />
 
-            <Spinner
-                android:id="@+id/spinner1"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:background="@android:drawable/btn_dropdown"
-                android:spinnerMode="dropdown" />
+                android:layout_marginRight="3dp"
+                android:layout_weight=".28"
+                android:background="@drawable/spinner_border"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinner1"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/drop1" />
+
+            </RelativeLayout>
+
         </LinearLayout>
 
 

@@ -44,15 +44,11 @@ public class fragSettings extends Fragment {
         password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new fragChangePassword());
-
-            }
+                loadFragment(new fragChangePassword());}
         });
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Soon!", Toast.LENGTH_SHORT).show();
-            }
+            public void onClick(View v) {Toast.makeText(getContext(), "Soon!", Toast.LENGTH_SHORT).show();}
         });
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override

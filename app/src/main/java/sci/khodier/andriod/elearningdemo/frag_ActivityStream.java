@@ -42,6 +42,9 @@ public class frag_ActivityStream extends Fragment {
         this.currentUser = currentUser;
     }
 
+    public frag_ActivityStream() {
+    }
+
     public void getAnn() {
         myListData = new ArrayList<>();
         db.collection("announcements")
