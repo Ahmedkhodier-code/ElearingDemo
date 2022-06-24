@@ -49,10 +49,12 @@ public class fragRegCourse extends Fragment {
     CheckBox checkBox;
     Button add;
     boolean flage;
+    String username;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    TextInputEditText courseName, password , creatorName;
+    TextInputEditText courseName, password, creatorName;
     private static final String TAG = "ReadAndWriteSnippets";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public fragRegCourse(Context context) {
         this.context = context;
     }
@@ -66,8 +68,25 @@ public class fragRegCourse extends Fragment {
         setExitTransition(inflater0.inflateTransition(R.transition.slide_right));
         add = rootView.findViewById(R.id.addCourse);
         password = rootView.findViewById(R.id.password);
-        creatorName=rootView.findViewById(R.id.creatorName);
+        creatorName = rootView.findViewById(R.id.creatorName);
         courseName = rootView.findViewById(R.id.courseName);
+
+        DocumentReference ref = FirebaseFirestore.getInstance().collection("users").document(Objects.requireNonNull(currentUser.getEmail()));
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        username = doc.get("username") + "";
+
+                    } else {
+                        Log.d("Document", "No data");
+                    }
+                }
+            }
+        });
+        System.out.println("username is " + username);
         checkBox = rootView.findViewById(R.id.checkBox);
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +113,7 @@ public class fragRegCourse extends Fragment {
             public void onClick(View v) {
                 System.out.println("add clicked");
                 Toast.makeText(context, "you clicked add", Toast.LENGTH_LONG).show();
-                if (searchCourse(courseName.getText() + "", password.getText() + "" , creatorName.getText()+"")) {
+                if (searchCourse(courseName.getText() + "", password.getText() + "", creatorName.getText() + "")) {
                     loadFragment(new fragCourse(context));
                 }
             }
@@ -102,28 +121,28 @@ public class fragRegCourse extends Fragment {
         return rootView;
     }
 
-    public boolean searchCourse(String courseName, String password , String creator) {
-        db.collection("courses").whereEqualTo("name", courseName).whereEqualTo("password", password).whereEqualTo("creator",creator)
+    public boolean searchCourse(String courseName, String password, String creator) {
+        db.collection("courses").whereEqualTo("name", courseName).whereEqualTo("password", password).whereEqualTo("creator", creator)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        Log.d(TAG, "the img" + " => " + document.getString("img"));
-                        Map<String, Object> course = new HashMap<>();
-                        course.put("courseId", document.getId());
-                        course.put("courseName", courseName);
-                        flage = addCourse(course , document.getId() );
-                        break;
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                Log.d(TAG, "the img" + " => " + document.getString("img"));
+                                Map<String, Object> course = new HashMap<>();
+                                course.put("courseId", document.getId());
+                                course.put("courseName", courseName);
+                                flage = addCourse(course, document.getId());
+                                break;
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                            Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
+                            System.out.println("result of failed: " + task.getException());
+                        }
                     }
-                } else {
-                    Log.w(TAG, "Error getting documents.", task.getException());
-                    Toast.makeText(context, "Courses failed.", Toast.LENGTH_SHORT).show();
-                    System.out.println("result of failed: " + task.getException());
-                }
-            }
-        });
+                });
         return flage;
     }
 
@@ -132,10 +151,13 @@ public class fragRegCourse extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()&&!std) {
-                            std=true;
+                        if (task.isSuccessful() && !std) {
+                            std = true;
                             Map<String, Object> Student = new HashMap<>();
-                            Student.put("StudentEmail",currentUser.getEmail());
+                            Student.put("StudentEmail", currentUser.getEmail());
+                            Student.put("name", username);
+
+
                             db.collection("courses").document(id).collection("Students").
                                     document(currentUser.getEmail()).set(Student)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
