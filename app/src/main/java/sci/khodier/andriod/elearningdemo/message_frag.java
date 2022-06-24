@@ -72,6 +72,9 @@ public class message_frag extends Fragment {
         this.courseId=courseId;
     }
 
+    public message_frag() {
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.frag_message, container, false);
