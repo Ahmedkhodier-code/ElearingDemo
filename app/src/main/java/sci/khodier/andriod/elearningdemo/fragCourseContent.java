@@ -82,7 +82,6 @@ public class fragCourseContent extends Fragment {
         material_Name = rootView.findViewById(R.id.nameMaterial);
         // Inflate the layout for this fragment
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refreshLayout);
-
         loadCourse();
         upload = rootView.findViewById(R.id.uploadpdf);
         db.collection("users").document(currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -159,7 +158,6 @@ public class fragCourseContent extends Fragment {
         return res;
     }
 
-
     public void getMaterial(String role) {
         myListData = new ArrayList<>();
         System.out.println("from content");
@@ -180,7 +178,6 @@ public class fragCourseContent extends Fragment {
                             }
                             RecyclerView recyclerView = rootView.findViewById(R.id.material);
                             System.out.println("the role3 is :" + role);
-
                             materialAdapter adapter = new materialAdapter(myListData, getContext(), "mat", role);
                             recyclerView.setHasFixedSize(true);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -272,6 +269,7 @@ public class fragCourseContent extends Fragment {
                         System.out.println("myurl" + myurl);
                         dialog.setProgress(100);
                         Toast.makeText(getContext(), "Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                        material_Name.setText("");
                         getMaterial(role);
                     } else {
                         dialog.dismiss();
@@ -280,7 +278,6 @@ public class fragCourseContent extends Fragment {
                 }
             });
         }
-
     }
 
     private void sendNotification(String messageBody, String title) {
