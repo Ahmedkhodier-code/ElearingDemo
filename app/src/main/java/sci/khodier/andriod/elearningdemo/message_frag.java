@@ -52,7 +52,6 @@ public class message_frag extends Fragment {
     ProgressBar progressBar;
     RecyclerView messageRecyclerView;
     ImageView addMessageImageView;
-    ImageView profilepic;
     String userName = "", profileImg = null;
     DocumentReference ref;
     private static final String TAG = "MainActivity";
