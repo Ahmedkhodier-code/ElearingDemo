@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     fragMessage message = new fragMessage(this);
 
     fragSettings settings = new fragSettings();
-    frag_ActivityStream activity = new frag_ActivityStream(this, currentUser);
+    frag_ActivityStream activity = new frag_ActivityStream(this);
     private static final String TAG = "PushNotification";
     private static final String CHANNEL_ID = "101";
 
