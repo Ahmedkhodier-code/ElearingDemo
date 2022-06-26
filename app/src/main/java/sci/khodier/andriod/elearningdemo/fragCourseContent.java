@@ -116,7 +116,7 @@ public class fragCourseContent extends Fragment {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("application/*");
-                startActivityForResult(galleryIntent, 1);
+                startActivityForResult(galleryIntent, 99);
             }
         });
         // Refresh  the layout

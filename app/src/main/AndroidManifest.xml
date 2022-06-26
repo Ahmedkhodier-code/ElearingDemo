@@ -2,17 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sci.khodier.andriod.elearningdemo">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
     <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
     <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -24,38 +28,41 @@
         android:theme="@style/Theme.Design.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activityEditProfile"
+            android:exported="false" />
+        <activity
             android:name=".assActivityDegree"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".chatActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".assActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ActiveCourse"
-            android:exported="false"
             android:configChanges="orientation"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ElearingDemo" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true" />
+            android:exported="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SplashScrean"
-            android:exported="true"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true">
+            android:exported="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,10 +82,10 @@
 
         <activity
             android:name=".LoginActivity"
-            android:exported="true"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true" />
+            android:exported="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -4,7 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragEditProfile">
+    tools:context=".activityEditProfile">
+
+
+    <ImageView
+        android:id="@+id/imghexagon"
+        android:layout_width="140dp"
+        android:layout_height="212dp"
+        android:layout_gravity="right"
+        android:contentDescription="@android:string/ok"
+        android:src="@drawable/hexagone1" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="120dp"
+        android:contentDescription="@android:string/ok"
+        android:scaleType="fitXY"
+        android:src="@drawable/hexagone2" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,22 +53,23 @@
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp">
 
                 <ImageView
                     android:id="@+id/layout_image"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_account_circle_black_36dp" />
+
                 <ImageView
                     android:id="@+id/change_pic"
                     android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="bottom|right"
                     android:background="@drawable/round_button"
-                    android:layout_height="50dp"
-                    android:src="@drawable/flip"/>
+                    android:src="@drawable/flip" />
 
             </FrameLayout>
 
@@ -81,13 +99,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_marginTop="40dp"
-                android:hint="Last Name"
+                android:hint="Email"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/last_name"
+                    android:id="@+id/Email0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -129,4 +147,3 @@
     </LinearLayout>
 
 </FrameLayout>
-

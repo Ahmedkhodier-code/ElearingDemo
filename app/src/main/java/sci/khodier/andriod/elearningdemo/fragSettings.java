@@ -38,7 +38,8 @@ public class fragSettings extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new fragEditProfile());
+                Intent it =new Intent(getContext() ,activityEditProfile.class);
+                startActivity(it);
             }
         });
         password.setOnClickListener(new View.OnClickListener() {
