@@ -99,7 +99,7 @@ public class activityEditProfile extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         itemImageUrl = uri.toString();
                                         System.out.println("itemImageUrl" + itemImageUrl);
-                                        updates.put("itemImageUrl", itemImageUrl);
+                                        updates.put("profImage", itemImageUrl);
                                         updates.put("Email", Email.getText().toString());
                                         updates.put("username", userName.getText().toString());
                                         updates.put("phone", phoneNum.getText().toString());
@@ -144,7 +144,7 @@ public class activityEditProfile extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         itemImageUrl = uri.toString();
                                         System.out.println("itemImageUrl" + itemImageUrl);
-                                        updates.put("itemImageUrl", itemImageUrl);
+                                        updates.put("profImage", itemImageUrl);
                                         updates.put("Email", Email.getText().toString());
                                         updates.put("username", userName.getText().toString());
                                         updates.put("phone", phoneNum.getText().toString());
