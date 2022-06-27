@@ -1,6 +1,6 @@
 package sci.khodier.andriod.elearningdemo;
 
-import androidx.annotation.NonNull;
+import  androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -266,6 +266,13 @@ public class activityEditProfile extends AppCompatActivity {
             flag = true;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
     private class LoadImage extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
 
@@ -294,4 +301,5 @@ public class activityEditProfile extends AppCompatActivity {
         }
 
     }
+
 }
