@@ -4,34 +4,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +36,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class activityEditProfile extends AppCompatActivity {
     ImageView profilePic, pick;
@@ -46,14 +46,21 @@ public class activityEditProfile extends AppCompatActivity {
     Button save;
     Bitmap bitmap = null;
     Bitmap bt = null;
-    int SELECT_PICTURE = 200;
+    private static final String TAG = "UpdateSnippets";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private static final int CAMERA_REQUEST = 1888;
     private static final int PICK_IMAGE = 99;
     Uri imageUri;
     DocumentReference ref;
+    boolean flag = false, cam = false;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+    StorageReference ImagesRef = storageRef.child("images/profiles/");
+    private String itemImageUrl;
+    ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +71,111 @@ public class activityEditProfile extends AppCompatActivity {
         pick = findViewById(R.id.change_pic);
         userName = findViewById(R.id.user_name);
         phoneNum = findViewById(R.id.contact_no);
-
+        pb = findViewById(R.id.progressbar);
+        save = findViewById(R.id.update);
+        Map<String, Object> updates = new HashMap<>();
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pb.setVisibility(View.VISIBLE);
+                if (flag) {
+                    if (cam) {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] data = baos.toByteArray();
+                        final String messagePushID = "" + System.currentTimeMillis();
+                        ImagesRef = storageRef.child("images/profiles/" + messagePushID);
+                        UploadTask uploadTask = ImagesRef.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                ImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        itemImageUrl = uri.toString();
+                                        System.out.println("itemImageUrl" + itemImageUrl);
+                                        updates.put("itemImageUrl", itemImageUrl);
+                                        updates.put("Email", Email.getText().toString());
+                                        updates.put("username", userName.getText().toString());
+                                        updates.put("phone", phoneNum.getText().toString());
+                                        DocumentReference washingtonRef = db.collection("users").document(currentUser.getEmail());
+                                        washingtonRef.update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error updating document", e);
+                                                    }
+                                                });
+                                        //-------------------------------------------------------------------------------
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle any errors
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        final String messagePushID = "" + System.currentTimeMillis();
+                        ImagesRef = storageRef.child("images/profiles/" + messagePushID);
+                        UploadTask uploadTask = ImagesRef.putFile(imageUri);
+                        // Register observers to listen for when the download is done or if it fails
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                ImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        itemImageUrl = uri.toString();
+                                        System.out.println("itemImageUrl" + itemImageUrl);
+                                        updates.put("itemImageUrl", itemImageUrl);
+                                        updates.put("Email", Email.getText().toString());
+                                        updates.put("username", userName.getText().toString());
+                                        updates.put("phone", phoneNum.getText().toString());
+                                        DocumentReference washingtonRef = db.collection("users").document(currentUser.getEmail());
+                                        washingtonRef.update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error updating document", e);
+                                                    }
+                                                });
+                                        //-----------------------------------------------------------------------------------------
+                                        // Got the download URL for 'users/me/profile.png'
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle any errors
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+        });
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,17 +252,23 @@ public class activityEditProfile extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST) {
+                imageUri = data.getData();
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
+                bitmap = photo;
                 profilePic.setImageBitmap(photo);
+                cam = true;
             } else if (requestCode == PICK_IMAGE) {
                 imageUri = data.getData();
+                System.out.println("path is => " + imageUri.getPath());
                 profilePic.setImageURI(imageUri);
+                cam = false;
             }
+            flag = true;
         }
     }
-
     private class LoadImage extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
+
         public LoadImage(ImageView imageView) {
             this.imageView = imageView;
         }

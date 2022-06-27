@@ -214,9 +214,7 @@ public class fragSignup extends Fragment implements View.OnClickListener {
                         final String TAG = "DocSnippets";
                         if (task.isSuccessful()) {
                             FirebaseUser fbUser = mAuth.getCurrentUser();
-
                             addUser(username0, Email0, college, phone0, type, university);
-
                             System.out.println("result of success: " + task.getResult());
                             Toast.makeText(getContext(), "Registration successful!", Toast.LENGTH_LONG).show();
                             // hide the progress bar
