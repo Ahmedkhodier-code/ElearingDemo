@@ -162,6 +162,8 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <LinearLayout
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -171,7 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:background="@drawable/round_button"
+                    android:background="@drawable/round2_button"
                     android:ems="17"
                     android:hint="Write a comment..."
                     android:inputType="textAutoComplete"
