@@ -98,8 +98,7 @@
                     android:background="@drawable/round3_button"
                     android:text="save"
                     android:textColor="@color/username" />
-
-
+                
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -111,6 +110,7 @@
             </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

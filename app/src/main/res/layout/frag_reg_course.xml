@@ -62,7 +62,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/round3_button"
                 android:text="add"
-                android:textColor="@color/icone_background" />
+                android:textColor="@color/username" />
 
         </LinearLayout>
 
